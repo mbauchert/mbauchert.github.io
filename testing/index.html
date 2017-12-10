@@ -15,46 +15,96 @@
 					<p id="audioFile">Loops with Clicks</p>
 				</div>
                 <div class="justify-content-center row">
-					<p id="frequency">Cuttoff Frequency</p>
-					<div id="slidecontainer">
-						<input type="range" min="1" max="20000" value="1000" class="slider" id="myRange">
-					</div>					
+					<div class="col-lg-6 col-sm-6">
+						<p id="frequency">Cuttoff Frequency</p>
+						<p id="speed">Speed</p>
+						<p id="distortion">Distortion</p>
+					</div>
+					<div class="col-lg-2 col-sm-6">
+						<input type="range" min="1" max="20000" value="1000" class="slider" id="cutoffSlider">
+						<input type="range" min="0" max="20000" value="30" class="slider" id="ringSpeedSlider">
+						<input type="range" min="1" max="50" value="1" class="slider" id="ringDistortSlider">
+					</div>						
 				</div>								
             </div>		
 		</div>
 	</body>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.2/Pizzicato.js"></script>
 	<script>
-	var slider = document.getElementById("myRange");
-	
-	
-	var lowPassFilter = new Pizzicato.Effects.LowPassFilter({		
-		frequency: 1000,
-		peak: 100		
-	});
-	
-	lowPassFilter.changeFrequency = function (newFreq) {
-		this.frequency = newFreq;
-	};
-	
-	slider.oninput = function() {
-		lowPassFilter.changeFrequency(parseInt(this.value));
-		document.getElementById("frequency").innerHTML = "Freq " + this.value;
-		console.log(lowPassFilter.frequency);
-	};
-	
-	var voice = new Pizzicato.Sound({source: 'input'}, 
-	function(){
-		voice.addEffect(lowPassFilter);
-		voice.play();
-	});
-	
-	
-	
-	
-	
-	
-	
+		var slider = document.getElementById("cutoffFreq");
+
+		var ringModulator = new Pizzicato.Effects.RingModulator({
+			speed: 10,
+			distortion: 4,
+			mix: 0.5
+		});
+		
+		ringModulator.changeSpeed = function (newSpeed) {
+			this.speed = newSpeed;
+		};
+		
+		ringModulator.changeDistort = function (newDistort) {
+			this.distortion = newDistort;
+		};
+
+		var lowPassFilter = new Pizzicato.Effects.LowPassFilter({		
+			frequency: 1000,
+			peak: 20		
+		});
+		
+		lowPassFilter.changeFrequency = function (newFreq) {
+			this.frequency = newFreq;
+		};
+
+		var compressor = new Pizzicato.Effects.Compressor({
+			threshold: -100,
+			knee: 0,
+			attack: 0.05,
+			release: 0.05,
+			ratio: 20
+		});
+
+		var delay = new Pizzicato.Effects.Delay({
+			feedback: 0.8,
+			time: 0.22,
+			mix: 0.75
+		});
+
+		var fuzz = new Pizzicato.Effects.Quadrafuzz({
+			lowGain: 0.9,
+			midLowGain: 0.9,
+			midHighGain: 0.9,
+			highGain: 0.9,
+		});	
+		
+		cutoffSlider.oninput = function() {
+			lowPassFilter.changeFrequency(parseInt(this.value));
+			document.getElementById("frequency").innerHTML = "Freq " + this.value;
+			console.log(lowPassFilter.frequency);
+		};
+		
+		ringSpeedSlider.oninput = function() {
+			ringModulator.changeSpeed(parseInt(this.value));
+			document.getElementById("speed").innerHTML = "Speed " + this.value;
+		};
+		
+		ringDistortSlider.oninput = function() {
+			ringModulator.changeDistort(parseInt(this.value));
+			document.getElementById("distortion").innerHTML = "Distortion " + this.value;
+		};
+		
+		
+		var voice = new Pizzicato.Sound({source: 'input'}, 
+		function(){	
+			voice.addEffect(compressor);
+			voice.addEffect(ringModulator);
+			voice.addEffect(lowPassFilter);
+			voice.addEffect(fuzz);		
+			//voice.addEffect(delay);		
+			voice.play();
+			Pizzicato.volume = 1;
+		});	
+		
 	</script>
 	
 </html>
