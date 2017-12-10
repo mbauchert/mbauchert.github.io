@@ -21,8 +21,8 @@
 						<p id="distortion">Distortion</p>
 					</div>
 					<div class="col-lg-2 col-sm-6">
-						<input type="range" min="1" max="20000" value="1000" class="slider" id="cutoffSlider">
-						<input type="range" min="0" max="20000" value="30" class="slider" id="ringSpeedSlider">
+						<input type="range" min="0" max="127" value="69" class="slider" id="cutoffSlider">
+						<input type="range" min="0" max="127" value="69" class="slider" id="ringSpeedSlider">
 						<input type="range" min="1" max="50" value="1" class="slider" id="ringDistortSlider">
 					</div>						
 				</div>								
@@ -30,6 +30,7 @@
 		</div>
 	</body>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.2/Pizzicato.js"></script>
+	<script src="MIDIUtils.js"></script>
 	<script>
 		var slider = document.getElementById("cutoffFreq");
 
@@ -78,14 +79,16 @@
 		});	
 		
 		cutoffSlider.oninput = function() {
-			lowPassFilter.changeFrequency(parseInt(this.value));
-			document.getElementById("frequency").innerHTML = "Freq " + this.value;
+			var cutoff = (MIDIUtils.noteNumberToFrequency(parseInt(this.value)));
+			lowPassFilter.changeFrequency(cutoff);
+			document.getElementById("frequency").innerHTML = "Freq " + cutoff;
 			console.log(lowPassFilter.frequency);
 		};
 		
 		ringSpeedSlider.oninput = function() {
-			ringModulator.changeSpeed(parseInt(this.value));
-			document.getElementById("speed").innerHTML = "Speed " + this.value;
+			var speed = (MIDIUtils.noteNumberToFrequency(parseInt(this.value)));
+			ringModulator.changeSpeed(speed);
+			document.getElementById("speed").innerHTML = "Speed " + speed;
 		};
 		
 		ringDistortSlider.oninput = function() {
