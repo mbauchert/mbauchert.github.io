@@ -97,7 +97,7 @@
 		};
 		
 		
-		var voice = new Pizzicato.Sound({source: 'input'}, 
+		var voice = new Pizzicato.Sound({source: 'input'}/*, 
 		function(){	
 			voice.addEffect(compressor);
 			voice.addEffect(ringModulator);
@@ -106,20 +106,16 @@
 			//voice.addEffect(delay);		
 			voice.play();
 			Pizzicato.volume = 1;
-		});	
+		}*/);	
 		
 		window.addEventListener('touchstart', function() {
-	// create empty buffer
-	var buffer = myContext.createBuffer(1, 1, 22050);
-	var source = myContext.createBufferSource();
-	source.buffer = buffer;
-
-	// connect to output (your speakers)
-	source.connect(myContext.destination);
-
-	// play the file
-	source.noteOn(0);
-
+		voice.addEffect(compressor);
+			voice.addEffect(ringModulator);
+			voice.addEffect(lowPassFilter);
+			voice.addEffect(fuzz);		
+			//voice.addEffect(delay);		
+			voice.play();
+			Pizzicato.volume = 1;
 
 
 }, false);
