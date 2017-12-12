@@ -78,6 +78,8 @@
 			highGain: 0.9,
 		});	
 		
+		
+		
 		cutoffSlider.oninput = function() {
 			var cutoff = (MIDIUtils.noteNumberToFrequency(parseInt(this.value)));
 			lowPassFilter.changeFrequency(cutoff);
@@ -96,8 +98,27 @@
 			document.getElementById("distortion").innerHTML = "Distortion " + this.value;
 		};
 		
+		//Unlock for IOS
+		var isUnlocked = false;
+		function unlock() {
+			if(isIOS || this.unlocked)
+				return;
+			// create empty buffer and play it
+			var buffer = myContext.createBuffer(1, 1, 22050);
+			var source = myContext.createBufferSource();
+			source.buffer = buffer;
+			source.connect(myContext.destination);
+			source.noteOn(0);
+			// by checking the play state after some time, we know if we're really unlocked
+			setTimeout(function() {
+				if((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+					isUnlocked = true;
+				}
+			}, 0);
+
+		}
 		
-		/*var voice = new Pizzicato.Sound({source: 'input'}, 
+		var voice = new Pizzicato.Sound({source: 'input'}, 
 		function(){	
 			voice.addEffect(compressor);
 			voice.addEffect(ringModulator);
@@ -106,9 +127,9 @@
 			//voice.addEffect(delay);		
 			voice.play();
 			Pizzicato.volume = 1;
-		});	*/
-		//Fuck you please work!
-		var whiteNoise = new Pizzicato.Sound({
+		});	
+		
+		/*var whiteNoise = Pizzicato.Sound({
 			source: 'script',
 			options: {
 			audioFunction: function(e) {
@@ -120,15 +141,14 @@
 		});
 		
 		window.addEventListener('touchstart', function() {
-			whiteNoise.addEffect(compressor);
+		voice.addEffect(compressor);
 			whiteNoise.addEffect(ringModulator);
 			whiteNoise.addEffect(lowPassFilter);
-			whiteNoise.addEffect(fuzz);		
-			//voice.addEffect(delay);
-			whiteNoise.addEffect(compressor);
-			whiteNoise.play();
+			.addEffect(fuzz);		
+			//voice.addEffect(delay);		
+			voice.play();
 			Pizzicato.volume = 1;
-		}, false);
+		}, false);*/
 		
 	</script>
 	
