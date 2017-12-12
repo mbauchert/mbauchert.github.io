@@ -108,7 +108,7 @@
 			Pizzicato.volume = 1;
 		});	*/
 		//Fuck you please work!
-		var whiteNoise = Pizzicato.Sound({
+		var whiteNoise = new Pizzicato.Sound({
 			source: 'script',
 			options: {
 			audioFunction: function(e) {
@@ -123,12 +123,12 @@
 			whiteNoise.addEffect(compressor);
 			whiteNoise.addEffect(ringModulator);
 			whiteNoise.addEffect(lowPassFilter);
-			whiteNoize.addEffect(fuzz);		
+			whiteNoise.addEffect(fuzz);		
 			//voice.addEffect(delay);
 			whiteNoise.addEffect(compressor);
 			whiteNoise.play();
 			Pizzicato.volume = 1;
-		}, false);*/
+		}, false);
 		
 	</script>
 	
