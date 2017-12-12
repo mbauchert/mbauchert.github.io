@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		
+	</head>
+	<body style="padding-top: 15px;">
+	    <div class="container" >
+		    <div class="jumbotron">		        
+				<div class="justify-content-center row">
+					<p id="audioFile">Loops with Clicks</p>
+				</div>
+                <div class="justify-content-center row">
+					<div class="col-lg-6 col-sm-6">
+						<p id="frequency">Cuttoff Frequency</p>
+						<p id="speed">Speed</p>
+						<p id="distortion">Distortion</p>
+					</div>
+					<div class="col-lg-2 col-sm-6">
+						<input type="range" min="0" max="127" value="69" class="slider" id="cutoffSlider">
+						<input type="range" min="0" max="127" value="69" class="slider" id="ringSpeedSlider">
+						<input type="range" min="1" max="50" value="1" class="slider" id="ringDistortSlider">
+					</div>						
+				</div>								
+            </div>		
+		</div>
+	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.2/Pizzicato.js"></script>
+	<script src="MIDIUtils.js"></script>
+	<script>
+		var slider = document.getElementById("cutoffFreq");
+
+		var ringModulator = new Pizzicato.Effects.RingModulator({
+			speed: 10,
+			distortion: 4,
+			mix: 0.5
+		});
+		
+		ringModulator.changeSpeed = function (newSpeed) {
+			this.speed = newSpeed;
+		};
+		
+		ringModulator.changeDistort = function (newDistort) {
+			this.distortion = newDistort;
+		};
+
+		var lowPassFilter = new Pizzicato.Effects.LowPassFilter({		
+			frequency: 1000,
+			peak: 20		
+		});
+		
+		lowPassFilter.changeFrequency = function (newFreq) {
+			this.frequency = newFreq;
+		};
+
+		var compressor = new Pizzicato.Effects.Compressor({
+			threshold: -100,
+			knee: 0,
+			attack: 0.05,
+			release: 0.05,
+			ratio: 20
+		});
+
+		var delay = new Pizzicato.Effects.Delay({
+			feedback: 0.8,
+			time: 0.22,
+			mix: 0.75
+		});
+
+		var fuzz = new Pizzicato.Effects.Quadrafuzz({
+			lowGain: 0.9,
+			midLowGain: 0.9,
+			midHighGain: 0.9,
+			highGain: 0.9,
+		});	
+		
+		cutoffSlider.oninput = function() {
+			var cutoff = (MIDIUtils.noteNumberToFrequency(parseInt(this.value)));
+			lowPassFilter.changeFrequency(cutoff);
+			document.getElementById("frequency").innerHTML = "Freq " + cutoff;
+			console.log(lowPassFilter.frequency);
+		};
+		
+		ringSpeedSlider.oninput = function() {
+			var speed = (MIDIUtils.noteNumberToFrequency(parseInt(this.value)));
+			ringModulator.changeSpeed(speed);
+			document.getElementById("speed").innerHTML = "Speed " + speed;
+		};
+		
+		ringDistortSlider.oninput = function() {
+			ringModulator.changeDistort(parseInt(this.value));
+			document.getElementById("distortion").innerHTML = "Distortion " + this.value;
+		};
+		
+		
+		/*var voice = new Pizzicato.Sound({source: 'input'}, 
+		function(){	
+			voice.addEffect(compressor);
+			voice.addEffect(ringModulator);
+			voice.addEffect(lowPassFilter);
+			voice.addEffect(fuzz);		
+			//voice.addEffect(delay);		
+			voice.play();
+			Pizzicato.volume = 1;
+		});	*/
+		
+		var whiteNoise = Pizzicato.Sound({
+			source: 'script',
+			options: {
+			audioFunction: function(e) {
+				var output = e.outputBuffer.getChannelData(0);
+				for (var i = 0; i < e.outputBuffer.length; i++)
+					output[i] = Math.random();
+				}
+			}
+		});
+		
+		window.addEventListener('touchstart', function() {
+			whiteNoise.addEffect(compressor);
+			whiteNoise.addEffect(ringModulator);
+			whiteNoise.addEffect(lowPassFilter);
+			whiteNoize.addEffect(fuzz);		
+			//voice.addEffect(delay);
+			whiteNoise.addEffect(compressor);
+			whiteNoise.play();
+			Pizzicato.volume = 1;
+		}, false);*/
+		
+	</script>
+	
+</html>
