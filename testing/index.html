@@ -97,7 +97,7 @@
 		};
 		
 		
-		var voice = new Pizzicato.Sound({source: 'input'}/*, 
+		var voice = new Pizzicato.Sound({source: 'input'}, 
 		function(){	
 			voice.addEffect(compressor);
 			voice.addEffect(ringModulator);
@@ -106,9 +106,9 @@
 			//voice.addEffect(delay);		
 			voice.play();
 			Pizzicato.volume = 1;
-		}*/);	
+		});	
 		
-		window.addEventListener('touchstart', function() {
+		/*window.addEventListener('touchstart', function() {
 		voice.addEffect(compressor);
 			voice.addEffect(ringModulator);
 			voice.addEffect(lowPassFilter);
@@ -116,9 +116,7 @@
 			//voice.addEffect(delay);		
 			voice.play();
 			Pizzicato.volume = 1;
-
-
-}, false);
+		}, false);*/
 		
 	</script>
 	
