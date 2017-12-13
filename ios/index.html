@@ -16,7 +16,8 @@
 				</div>
                 <div class="justify-content-center row">
 					<div class="col-lg-6 col-sm-6">.
-						<button onclick="unlock()">Click me</button>
+						<button onclick="unlock()">Fuck iOS</button>
+						<p id="buttonPressed"></p>
 						<p id="frequency">Cuttoff Frequency</p>
 						<p id="speed">Speed</p>
 						<p id="distortion">Distortion</p>
@@ -112,7 +113,15 @@
 			Pizzicato.volume = 1;
 		});	*/
 		
-		var whiteNoise = new Pizzicato.Sound({
+		
+		Pizzicato.volume = 1;
+		//Unlock for IOS
+		var isUnlocked = false;
+		function unlock() {
+			if(isIOS || this.unlocked)
+				return;
+			// create empty buffer and play it
+			var whiteNoise = new Pizzicato.Sound({
 			source: 'script',
 			options: {
 			audioFunction: function(e) {
@@ -122,17 +131,7 @@
 				}
 			}
 		});
-		Pizzicato.volume = 1;
-		//Unlock for IOS
-		var isUnlocked = false;
-		function unlock() {
-			//if(isIOS || this.unlocked)
-			//	return;
-			// create empty buffer and play it
-			//var buffer = myContext.createBuffer(1, 1, 22050);
-			//var source = myContext.createBufferSource();
-			//source.buffer = buffer;
-			//source.connect(myContext.destination);
+			document.getElementById("buttonPressed").innerHTML = "Button Pressed!";
 			whiteNoise.play();
 			// by checking the play state after some time, we know if we're really unlocked
 			setTimeout(function() {
