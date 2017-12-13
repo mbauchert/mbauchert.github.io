@@ -15,7 +15,8 @@
 					<p id="audioFile">Loops with Clicks</p>
 				</div>
                 <div class="justify-content-center row">
-					<div class="col-lg-6 col-sm-6">
+					<div class="col-lg-6 col-sm-6">.
+						<button onclick="unlock()">Click me</button>
 						<p id="frequency">Cuttoff Frequency</p>
 						<p id="speed">Speed</p>
 						<p id="distortion">Distortion</p>
@@ -98,27 +99,9 @@
 			document.getElementById("distortion").innerHTML = "Distortion " + this.value;
 		};
 		
-		//Unlock for IOS
-		var isUnlocked = false;
-		function unlock() {
-			if(isIOS || this.unlocked)
-				return;
-			// create empty buffer and play it
-			var buffer = myContext.createBuffer(1, 1, 22050);
-			var source = myContext.createBufferSource();
-			source.buffer = buffer;
-			source.connect(myContext.destination);
-			source.noteOn(0);
-			// by checking the play state after some time, we know if we're really unlocked
-			setTimeout(function() {
-				if((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
-					isUnlocked = true;
-				}
-			}, 0);
-
-		}
 		
-		var voice = new Pizzicato.Sound({source: 'input'}, 
+		
+		/*voice = new Pizzicato.Sound({source: 'input'}, 
 		function(){	
 			voice.addEffect(compressor);
 			voice.addEffect(ringModulator);
@@ -127,9 +110,9 @@
 			//voice.addEffect(delay);		
 			voice.play();
 			Pizzicato.volume = 1;
-		});	
+		});	*/
 		
-		/*var whiteNoise = Pizzicato.Sound({
+		var whiteNoise = new Pizzicato.Sound({
 			source: 'script',
 			options: {
 			audioFunction: function(e) {
@@ -139,8 +122,29 @@
 				}
 			}
 		});
+		Pizzicato.volume = 1;
+		//Unlock for IOS
+		var isUnlocked = false;
+		function unlock() {
+			//if(isIOS || this.unlocked)
+			//	return;
+			// create empty buffer and play it
+			//var buffer = myContext.createBuffer(1, 1, 22050);
+			//var source = myContext.createBufferSource();
+			//source.buffer = buffer;
+			//source.connect(myContext.destination);
+			whiteNoise.play();
+			// by checking the play state after some time, we know if we're really unlocked
+			setTimeout(function() {
+				if((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+					isUnlocked = true;
+				}
+			}, 0);
+
+		};
 		
-		window.addEventListener('touchstart', function() {
+			
+		/*window.addEventListener('touchstart', unlock() {
 		voice.addEffect(compressor);
 			whiteNoise.addEffect(ringModulator);
 			whiteNoise.addEffect(lowPassFilter);
