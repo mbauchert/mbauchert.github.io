@@ -16,7 +16,7 @@
 				</div>
                 <div class="justify-content-center row">
 					<div class="col-lg-6 col-sm-6">.
-						<button onclick="unlock()">Fuck iOS</button>
+						<button onclick="unlock()">Double Fuck iOS</button>
 						<p id="buttonPressed"></p>
 						<p id="frequency">Cuttoff Frequency</p>
 						<p id="speed">Speed</p>
@@ -118,8 +118,8 @@
 		//Unlock for IOS
 		var isUnlocked = false;
 		function unlock() {
-			if(isIOS || this.unlocked)
-				return;
+			//if(isIOS || this.unlocked)
+			//	return;
 			// create empty buffer and play it
 			var whiteNoise = new Pizzicato.Sound({
 			source: 'script',
@@ -135,7 +135,7 @@
 			whiteNoise.play();
 			// by checking the play state after some time, we know if we're really unlocked
 			setTimeout(function() {
-				if((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+				if((whiteNoise.playbackState === source.PLAYING_STATE || whiteNoise.playbackState === source.FINISHED_STATE)) {
 					isUnlocked = true;
 				}
 			}, 0);
