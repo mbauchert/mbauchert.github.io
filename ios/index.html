@@ -34,6 +34,30 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.2/Pizzicato.js"></script>
 	<script src="MIDIUtils.js"></script>
 	<script>
+		//check the OS
+		var isMobile = {
+			Android: function() {
+				return navigator.userAgent.match(/Android/i);
+			},
+			BlackBerry: function() {
+				return navigator.userAgent.match(/BlackBerry/i);
+			},
+			iOS: function() {
+				return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+			},
+			Opera: function() {
+				return navigator.userAgent.match(/Opera Mini/i);
+			},
+			Windows: function() {
+				return navigator.userAgent.match(/IEMobile/i);
+			},
+			any: function() {
+				return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+			}
+		};
+		
+		
+		
 		var slider = document.getElementById("cutoffFreq");
 
 		var ringModulator = new Pizzicato.Effects.RingModulator({
@@ -152,6 +176,9 @@
 			voice.play();
 			Pizzicato.volume = 1;
 		}, false);*/
+		
+		if( isMobile.iOS() ) 
+			runIOS();
 		
 	</script>
 	
