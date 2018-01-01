@@ -493,12 +493,15 @@
 		<!-- seedrandom.js
 		<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>-->
 		
-		<script>
+		<script>		
 			//pass in the audio context
 			var context = new AudioContext();
 
 			//on iOS, the context will be started on the first valid user action on the #playButton element
-			StartAudioContext(context, "#playButton")
+			StartAudioContext(context, "#playButton");
+			
+			Tone.context.latencyHint = 'playback';
+
 			
 			//create a synth and connect it to the master output (your speakers)
 			var guideTone = new Tone.Synth();
