@@ -188,9 +188,10 @@ current.keySetup();
 //setup Tone.js
 //pass in the audio context
 var context = new AudioContext();
-
+Tone.setContext(context);
 //on iOS, the context will be started on the first valid user action on the #playButton element
-StartAudioContext(context, "#playButton");
+//StartAudioContext(context, "#playButton");
+StartAudioContext(Tone.context, '#playButton');
 
 //Tone.context.latencyHint = 'playback';
 
@@ -227,9 +228,8 @@ function toggleSound() {
 
 function togglePlayStop() {				
 	var currentState = document.getElementById("playStop").innerHTML;
-	
-	if (currentState == "play_arrow") {
-		Tone.Transport.start('+0.1');
+	Tone.Transport.start('+0.1');
+	if (currentState == "play_arrow") {		
 		document.getElementById("playStop").innerHTML = "stop";					
 	}else {
 		Tone.Transport.stop();
