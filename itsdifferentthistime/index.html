@@ -443,6 +443,10 @@
 										</g>
 									</g>
 								</g>
+								<g id="R" style="display:none" transform="">
+									<rect height="5.2674" width="14.789" y="78.95" x="79.947"/>
+									<rect height="5.4818" width="14.789" y="151.49" x="80.161"/>
+								</g>
 								<g id="staff" transform="translate(0 44.018)">
 									<path style="stroke-width:0;stroke-miterlimit:10;fill-rule:evenodd" d="m6.3563 17.758c-1.1998 1.588-2.9186 5.305-3.6062 7.245-1.0313 4.069-1.375 9.019-1.0313 13.797 0.16842 1.5867 0.51232 5.1222 1.0312 7.9513 0.85606 6.7249 1.0314 9.554 1.0314 12.383-0.1753 4.597-1.3751 8.305-3.2691 10.781-0.34388 0.353-0.5123 0.706-0.5123 0.887 0 0.18103 0.16842 0.53423 0.51232 0.88742 1.894 2.4759 3.0938 6.1835 3.2691 10.608 0 3.0013-0.17532 5.8303-1.0314 12.374-0.51888 3.0101-0.86279 6.5456-1.0312 7.9601-0.34373 4.95 0 9.9001 1.0312 13.789 0.85606 3.1823 3.95 8.6665 4.8128 8.6665 0.34373 0 0.68747-0.3532 0.68747-0.70816 0-0.17926-0.34373-0.70639-0.68747-1.2406-2.0626-3.0012-2.9254-6.0096-3.2691-10.606 0-2.8291 0.17515-5.4843 1.0312-12.202 0.3438-2.648 0.6877-5.83 0.8628-7.072 0.6877-8.486-0.6874-15.738-4.1251-21.041-0.5191-0.708-0.8628-1.415-0.8628-1.415s0.34373-0.70639 0.86279-1.4145c3.4377-5.303 4.8128-12.555 4.1251-21.222-0.1751-1.061-0.519-4.244-0.8627-7.071-0.8561-6.538-1.0313-9.194-1.0313-12.023 0.3438-4.597 1.2066-7.605 3.2691-10.606 0.6875-1.062 0.8628-1.415 0.5191-1.768-0.5191-0.355-0.8628-0.181-1.7256 1.06z"/>
 									<path style="stroke-width:0;stroke-miterlimit:10;fill-rule:evenodd" d="m25.268 89.324c-2.5368 0.26514-4.8412 1.9597-6.0225 4.436-0.52928 1.115-0.79383 2.2299-0.85844 3.4519 0 0.57787 0.03222 0.9161 0.16789 1.3206 0.45822 1.5942 2.072 2.7092 3.718 2.6089 1.5814-0.10538 2.8336-1.4209 3.0595-3.1528 0.10328-0.60506-0.03222-1.3546-0.29694-1.8917-0.69056-1.494-2.4012-2.2707-3.8148-1.7608l-0.26456 0.10028 0.06461-0.20566c0.75517-2.031 2.1753-3.5182 3.8213-3.9635 1.5814-0.40451 3.1563 0.03229 4.3763 1.188 2.1431 2.099 2.9628 6.3345 1.9106 10.058-0.23233 0.74444-0.426 1.3206-0.81978 2.0973-0.79383 1.6605-1.7815 3.0151-3.2983 4.6077-2.0076 2.0327-4.6088 3.9975-8.2946 6.2274-0.69056 0.44529-0.75517 0.51158-0.75517 0.67815 0 0.23964 0.19367 0.4453 0.426 0.4453 0.03222 0 0.12906-0.034 0.20011-0.0663 0.06461-0.0408 0.39378-0.20735 0.72294-0.33992 7.081-3.1528 11.522-6.3005 14.059-9.9921 1.5169-2.2367 2.3043-4.7725 2.3043-7.3815 0-4.6077-2.769-7.6551-7.5393-8.3332-0.9875-0.17166-2.1429-0.20565-2.8658-0.13257zm12.742 2.9743c-0.59389 0.13937-1.0843 0.64416-1.22 1.256-0.22589 0.94839 0.32917 1.8985 1.22 2.0973 1.2522 0.30593 2.3367-0.81072 2.0398-2.0973-0.19367-0.9178-1.1167-1.4872-2.0398-1.256zm0 8.4386c-0.59389 0.13257-1.0843 0.63736-1.22 1.2475-0.22589 0.95008 0.32917 1.9002 1.22 2.1058 1.2522 0.29914 2.3367-0.81752 2.0398-2.1058-0.19367-0.9093-1.1167-1.4872-2.0398-1.2475z"/>
@@ -493,127 +497,7 @@
 		<!-- seedrandom.js
 		<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>-->
 		
-		<script>		
-			//pass in the audio context
-			var context = new AudioContext();
-
-			//on iOS, the context will be started on the first valid user action on the #playButton element
-			StartAudioContext(context, "#playButton");
-			
-			//Tone.context.latencyHint = 'playback';
-
-			
-			//create a synth and connect it to the master output (your speakers)
-			var guideTone = new Tone.Synth();
-			var volume = new Tone.Volume(0);
-			guideTone.chain(volume, Tone.Master);
-			
-			//Set Tempo (original was 140 bpm)
-			Tone.Transport.bpm.value = 140;
-			
-			//Set Scales (original used Major and Harmonic Minor scales)
-			var scale = {
-				major: [2,2,1,2,2,2,1],
-				minor: [2,1,2,2,1,3,1],
-				chromatic: ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
-			};
-			
-			var probability = {
-				//Set Probabilities for Scale Degrees including for Rest(0th element)
-				scaleDegree: [58,14,28,28,42,42,14]			
-			};
-			
-			var currentKey = getNewKey(0);
-			
-			function getNewKey(root){
-				//set the root for the new key
-				var newKey = [scale.chromatic[root]];
-				
-				var stepCount = root;
-				console.log(newKey[0]);
-				for (i = 1; i < scale.major.length; i++){
-					stepCount = stepCount + scale.major[i-1];
-					if (stepCount > 11){
-						stepCount = stepCount - 12;
-					};
-					newKey[i] = scale.chromatic[stepCount];
-					//console.log(newKey[i]);
-				};				
-				return newKey;
-			};
-			
-			
-			
-			/*Set seed for Key Changes using the Device's Location Coordinates
-			  (original changed keys every 30 measures)*/
-			//Math.seedrandom("testing");
-			
-			var currentNote = "C";
-			var measureCount = 0;
-			
-			//Create a loop
-			var loop = new Tone.Loop(function(time){
-				measureCount++;
-			
-				//Choose a random number between 0 and the length of the current scale
-				var newNote = Math.floor(Math.random() * currentKey.length);
-				
-				//if a random number between 0 and 100 is less than or equal to the probability of the chosen scale degree, play it
-				if (probability.scaleDegree[newNote] <= Math.floor(Math.random() * 101)){
-					//make the last played note invisible
-					document.getElementById(currentNote).style.display = "none";
-					
-					//update the current note
-					currentNote = currentKey[newNote];
-					
-					//make visible the new note
-					document.getElementById(currentNote).style.display = "inline";
-					
-					//play the new note
-					guideTone.triggerAttackRelease(currentNote.concat("4"), "2n", time);	
-				}; 				
-			}, "1n");
-			//repeat until time to change keys
-			//if time to change key, set the new key based on the seeded probability
-			
-			
-			
-			//play the loop between 0-180m on the transport
-			loop.start(0).stop('180m'); 
-			
-			
-			
-			//when finished, toggle the play button and play the rest
-			
-			
-			
-		
-			function toggleSound() {				
-				var currentState = document.getElementById("soundOnOff").innerHTML;
-				 
-		
-				if (currentState == "volume_up") {
-					volume.mute = true;
-					document.getElementById("soundOnOff").innerHTML = "volume_off";					
-				}else {
-					volume.mute = false;
-					document.getElementById("soundOnOff").innerHTML = "volume_up";					
-				}				
-			};
-			
-			function togglePlayStop() {				
-				var currentState = document.getElementById("playStop").innerHTML;
-				
-				if (currentState == "play_arrow") {
-					Tone.Transport.start('+0.1');
-					document.getElementById("playStop").innerHTML = "stop";					
-				}else {
-					Tone.Transport.stop();
-					document.getElementById("playStop").innerHTML = "play_arrow";					
-				}				
-			};
-		
-		</script>
+		<script src="ItsDifferentThisTime.js"></script>
 	</body>
 	
 </html>
