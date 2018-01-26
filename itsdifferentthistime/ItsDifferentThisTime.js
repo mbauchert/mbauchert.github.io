@@ -131,7 +131,11 @@ var current = {
 	measure: 0,
 	measureBecomesThisMeasure: function() 
 	{
-		this.measure++;
+		this.measure = this.measure + 1;
+	},
+	measureGetsReset: function()
+	{
+		this.measure = 0;
 	}
 };
 
@@ -177,6 +181,7 @@ var thisPiece = new Tone.Loop(function(time)
 	
 	if (thisMeasureIsRight(current.measure)) {
 		current.keyGetsChanged();
+		current.measureGetsReset();
 	}	
 }, "1n");
 
@@ -223,7 +228,7 @@ guideTone.chain(volume, Tone.Master);
 Tone.Transport.bpm.value = initial.bpm;
 
 //play the piece
-thisPiece.start(0).stop('180m'); 
+thisPiece.start(0); 
 
 
 function toggleSound() {				
