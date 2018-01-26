@@ -35,5 +35,5 @@ function getLink()
 	var seed = Math.floor(Math.random() * 9999);
 	
 	var customLink = document.getElementById('customLink');
-	customLink.value = window.location + scaleDegreeRankings + "&kcr=" + keyChangeRankings + "&bpm=" + bpm + "&mpk=" + measuresPerKeyChange + "&seed=" + seed;
+	customLink.value = window.location + "?sdr=" + scaleDegreeRankings + "&kcr=" + keyChangeRankings + "&bpm=" + bpm + "&mpk=" + measuresPerKeyChange + "&seed=" + seed;
 }	

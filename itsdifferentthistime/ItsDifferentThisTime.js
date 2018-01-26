@@ -7,6 +7,12 @@ var initial = {
 	setup: function()
 	{
 		newSdr = getQueryVariable("sdr");
+		
+		//newSdr will be false if there are no variables in the url
+		if (newSdr == false)
+		{
+			return;
+		}
 		this.scaleDegreeRankings = newSdr.split("");
 		
 		newKcr = getQueryVariable("kcr");
