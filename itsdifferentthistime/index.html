@@ -28,18 +28,57 @@
 			.btn-outline-light.active, .btn-outline-light:active, .show>.btn-outline-light.dropdown-toggle {
 				color: #000;				
 			}
+			
+			p, small {
+				color: #fff;
+			}
+			
+			.slidecontainer {
+				width: 100%;
+			}
+
+			.slider {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 25px;
+				background: #d3d3d3;
+				outline: none;
+				opacity: 0.7;
+				-webkit-transition: .2s;
+				transition: opacity .2s;
+			}
+
+			.slider:hover {
+				opacity: 1;
+			}
+
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 25px;
+				height: 25px;
+				background: #4CAF50;
+				cursor: pointer;
+			}
+
+			.slider::-moz-range-thumb {
+				width: 25px;
+				height: 25px;
+				background: #4CAF50;
+				cursor: pointer;
+			}
 		</style>
 		
 		<!--info, and settings-->
 		<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
 			<li class="nav-item">
-				<a class="nav-link active text-white" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">It's Different This Time</a>
+				<a class="nav-link active text-white" id="itsDifferentThisTime-tab" data-toggle="tab" href="#itsDifferentThisTime" role="tab" aria-controls="itsDifferentThisTime" aria-selected="true">It's Different This Time</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="material-icons text-white">info_outline</i></a>
+				<a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false"><i class="material-icons text-white">info_outline</i></a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="material-icons text-white">settings</i></a>	
+				<a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false"><i class="material-icons text-white">settings</i></a>	
 			</li>
 		</ul>
 		
@@ -47,7 +86,7 @@
 	</head>
 	<body style="">
 		<div class="tab-content" id="myTabContent">
-			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+			<div class="tab-pane fade show active" id="itsDifferentThisTime" role="tabpanel" aria-labelledby="itsDifferentThisTime-tab">
 				<div class="container">
 					<!--display clef and notes to be played-->
 					<div class="row justify-content-center">
@@ -480,8 +519,85 @@
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-			<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+			<div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">...</div>
+			<div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">.
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-2 col-lg-1">.
+						</div>
+						<div class="col-4 col-lg-1">
+							<p>Scale Degrees</p>
+						</div>
+						<div class="col-6 col-lg-2">
+							<p>Key Change Degrees</p>
+						</div>
+					</div>					
+				
+					<div class="row justify-content-center">
+						<div class="col-2 col-lg-1">
+							<small>Most Likely</small>
+							<small style="position: absolute; bottom: 0;">Least Likely</small>
+						</div>
+						<div class="col-4 col-lg-1"  id="scaleDegrees">
+							<button type="button"class="btn btn-outline-light btn-block" data-id="R">Rest</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="1">1st</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="2">2nd</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="3">3rd</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="4">4th</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="5">5th</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="6">6th</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="7">7th</button>
+						</div>
+						<div class="col-6 col-lg-2" id="keyChangeDegrees">							
+							<button type="button"class="btn btn-outline-light btn-block" data-id="1">|| Maj/Min</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="2">2nd</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="3">3rd</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="4">4th</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="5">5th</button>
+							<button type="button"class="btn btn-outline-light btn-block" data-id="6">6th</button>							
+						</div>
+					</div>
+					<hr>
+					<!--BPM Slider-->
+					<div class="row justify-content-center">
+						<div class="col-12 col-lg-4">
+							<p class="text-center" id="bpmSliderValue"></p>													
+						</div>
+					</div>
+					<div class="row  justify-content-center">
+						<div class="col-12 col-lg-4">
+							<div class="slidecontainer">
+								<input type="range" min="40" max="240" value="140" class="slider" id="bpmSlider">
+							</div>														
+						</div>
+					</div>
+					<hr>
+					<!--KeyChange Slider-->
+					<div class="row justify-content-center">
+						<div class="col-12 col-lg-4">
+							<p class="text-center" id="keyChangeSliderValue"></p>													
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-12 col-lg-4">
+							<div class="slidecontainer">
+								<input type="range" min="1" max="240" value="40" class="slider" id="keyChangeSlider">
+							</div>														
+						</div>
+					</div>
+					<hr>
+					<!--GET LINK BUTTON AND FORM-->
+					<div class="row justify-content-center">
+						<div class="col-8 col-lg-3">
+							<input class="form-control" id="customLink" ></input>
+						</div>
+						<div class="col-4 col-lg-1">
+							<button type="button" onclick="getLink()" class="btn btn-outline-light">Get Link</button>												
+						</div>
+						
+					</div>
+				</div>
+			</div>
 		</div>
 		
 	    
@@ -493,11 +609,51 @@
 		<!-- Tone.js -->
 		<script src="Tone.min.js"></script>
 		<script src="StartAudioContext.js"></script>
-		
-		<!-- seedrandom.js
-		<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>-->
+		<script src="Sortable.min.js"></script>
 		
 		<script src="ItsDifferentThisTime.js"></script>
+		<script>
+			var scaleDegrees = document.getElementById('scaleDegrees');
+			var sortableScaleDegrees = Sortable.create(scaleDegrees);
+			
+			var keyChangeDegrees = document.getElementById('keyChangeDegrees');
+			var sortableKeyChangeDegrees = Sortable.create(keyChangeDegrees);
+			
+			var bpmSlider = document.getElementById("bpmSlider");
+			var bpmOutput = document.getElementById("bpmSliderValue");
+			bpmOutput.innerHTML = "BPM: ".concat(bpmSlider.value); // Display the default slider value
+
+			// Update the current slider value (each time you drag the slider handle)
+			bpmSlider.oninput = function() {
+				bpmOutput.innerHTML = "BPM: ".concat(this.value);
+			}
+			
+			var keyChangeSlider = document.getElementById("keyChangeSlider");
+			var keyChangeOutput = document.getElementById("keyChangeSliderValue");
+			keyChangeOutput.innerHTML = "Measures Per Key Change: ".concat(keyChangeSlider.value); // Display the default slider value
+
+			// Update the current slider value (each time you drag the slider handle)
+			keyChangeSlider.oninput = function() {
+				keyChangeOutput.innerHTML = "Measures Per Key Change: ".concat(this.value);
+			}
+			
+			function getLink()
+			{			
+				var scaleDegreeRankings = (sortableScaleDegrees.toArray()).toString();
+				scaleDegreeRankings = scaleDegreeRankings.replace(new RegExp(',', 'g'), '');
+				
+				var keyChangeRankings = (sortableKeyChangeDegrees.toArray()).toString();
+				keyChangeRankings = keyChangeRankings.replace(new RegExp(',', 'g'), '');
+				
+				var bpm = bpmSlider.value;
+				var measuresPerKeyChange = keyChangeSlider.value;
+				var seed = Math.floor(Math.random() * 9999);
+				
+				var customLink = document.getElementById('customLink');
+				customLink.value = "mbauchert.github.io/itsdifferentthistime/index.html?sdr=" + scaleDegreeRankings + "&kcr=" + keyChangeRankings + "&bpm=" + bpm + "&mpk=" + measuresPerKeyChange + "&seed=" + seed;
+			}	
+		
+		</script>
 	</body>
 	
 </html>

@@ -2,12 +2,31 @@ var initial = {
 	scaleDegreeRankings: ["R",1,3,5,7,2,4,6],
 	keyChangeRankings: [6,1,5,4,3,2],
 	bpm: 140,
-	measuresPerKeyChange: 10,
+	measuresPerKeyChange: 40,
 	seed: "42",
 	setup: function()
 	{
-	//put URL to initial value setup here	
+		newSdr = getQueryVariable("sdr");
+		this.scaleDegreeRankings = newSdr.split("");
+		
+		newKcr = getQueryVariable("kcr");
+		this.keyChangeRankings = newKcr.split("");
+		
+		this.bpm = getQueryVariable("bpm");
+		this.measuresPerKeyChange = getQueryVariable("mpk");
+		this.seed = getQueryVariable("seed");
 	}
+};
+
+function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
 };
 
 
@@ -103,7 +122,7 @@ var current = {
 	noteGets: function(scaleDegree)
 	{	
 		if (scaleDegree != "R") {
-			this.note = this.key[scaleDegree - 1];
+			this.note = this.key[parseInt(scaleDegree) - 1];
 		} else {			
 			this.note = "R";
 		}
@@ -181,7 +200,7 @@ function playAndDisplayNewNote(time)
 };
 //repeat until time to change keys
 //if time to change key, set the new key based on the seeded probability
-
+initial.setup();
 weighted.listsSetup();
 current.keySetup();
 
@@ -205,12 +224,6 @@ Tone.Transport.bpm.value = initial.bpm;
 
 //play the piece
 thisPiece.start(0).stop('180m'); 
-
-
-
-//when finished, toggle the play button and play the rest
-
-
 
 
 function toggleSound() {				
