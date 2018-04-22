@@ -223,7 +223,10 @@ input[type=range][orient=vertical]
 			//update progress bar
 			document.getElementById("audioProgressBar").value = currentTime;
 			//update current time
-			if(currentTime < 60)
+			if(currentTime < 10)
+			{
+				document.getElementById("currentTime").innerHTML = "00:0" + currentTime;
+			} else if (currentTime < 60)
 			{
 				document.getElementById("currentTime").innerHTML = "00:" + currentTime;
 			} else
@@ -263,11 +266,11 @@ input[type=range][orient=vertical]
 		}
 		
 		fader1.oninput = function() {
-			vol1.volume = ocument.getElementById("fader1").value;
+			vol1.volume = document.getElementById("fader1").value;
 		}
 		
 		fader2.oninput = function() {
-			vol2.volume = ocument.getElementById("fader2").value;
+			vol2.volume = document.getElementById("fader2").value;
 		}
 	
 	</script>
