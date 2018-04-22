@@ -200,14 +200,15 @@ input[type=range][orient=vertical]
 	
 	<script>
 		//put audio files into this thing
-		var player = new Tone.Player("Will Mixing Test 1-Click.mp3", audioFileLoaded()).toMaster();
+		var player = [new Tone.Player("Will Mixing Test 1-Click.mp3", audioFileLoaded()).toMaster(), new Tone.Player("Will Mixing Test 2-Audio.mp3", audioFileLoaded()).toMaster()];
 		//play as soon as the buffer is loaded
-		player.sync().start(0);
+		player[0].sync().start(0);
+		player[1].sync().start(0);
 		//var audioFiles = {"click":"http://localhost/Wills Mixing Test 1-Click.wav", "audio":"http://localhost/Wills Mixing Test 2-Audio.wav"};
 		//var audioFilePlayers = new Tone.Players(audioFiles, audioFilesLoaded());
 		//audioFilePlayers.toMaster();
 		
-		
+		Tone.Transport.bpm.value = 60;
 		
 		function setCurrentSong(newSong)
 		{
@@ -228,10 +229,10 @@ input[type=range][orient=vertical]
 			if(playState == "play_circle_outline")
 			{
 				Tone.Transport.start();
-				document.getElementById("currentSongTitle").innerHTML = "pause_circle_outline";
+				document.getElementById("playButton").innerHTML = "pause_circle_outline";
 			} else {
 				Tone.Transport.pause();
-				document.getElementById("currentSongTitle").innerHTML = "play_circle_outline";
+				document.getElementById("playButton").innerHTML = "play_circle_outline";
 			}
 		}
 	
