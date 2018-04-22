@@ -200,7 +200,7 @@ input[type=range][orient=vertical]
 	
 	<script>
 		//put audio files into this thing
-		var player = [new Tone.Player("Will Mixing Test 1-Click.mp3", audioFileLoaded()).toMaster(), new Tone.Player("Will Mixing Test 2-Audio.mp3", audioFileLoaded()).toMaster()];
+		var player = [new Tone.Player("Will Mixing Test 1-Click.mp3", audioFileLoaded()).toMaster(), new Tone.Player("Will Mixing Test -Audio.mp3", audioFileLoaded()).toMaster()];
 		//play as soon as the buffer is loaded
 		player[0].sync().start(0);
 		player[1].sync().start(0);
