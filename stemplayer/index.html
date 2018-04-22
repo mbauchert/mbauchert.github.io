@@ -209,11 +209,12 @@ input[type=range][orient=vertical]
 		//audioFilePlayers.toMaster();
 		
 		Tone.Transport.bpm.value = 60;
+		var currentTime = 0;
 		
 		function updateAudioProgressBar()
 		{
 			//get transport time
-			var currentTime = Tone.Transport.getSecondsAtTime(); 
+			var currentTime++; 
 			//update progress bar
 			document.getElementById("audioProgressBar").value = currentTime;
 			//update current time
