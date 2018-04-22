@@ -119,7 +119,7 @@ input[type=range][orient=vertical]
 				<p class="light-gold" id="currentTime">0:00</p>
 			</div>
 			<div class="col-9">
-				<input type="range" class="slider" min="0" max="120" value="0" id="audioProgressBar" onchange="">
+				<input type="range" class="slider" min="0" max="120" value="0" id="audioProgressBar" onchange="setTransport(value)">
 			</div>
 			<div class="col text-left">
 				<p class="light-gold">3:00</p>
@@ -239,6 +239,11 @@ input[type=range][orient=vertical]
 		
 		Tone.Transport.scheduleRepeat(updateAudioProgressBar, "4n", "0m");
 		
+		setTransport(newTime)
+		{
+		
+		}
+		
 		function setCurrentSong(newSong)
 		{
 			document.getElementById("currentSongTitle").innerHTML = newSong;
@@ -266,11 +271,11 @@ input[type=range][orient=vertical]
 		}
 		
 		fader1.oninput = function() {
-			vol1.volume = document.getElementById("fader1").value;
+			vol1.volume.rampto(document.getElementById("fader1").value, .01);
 		}
 		
 		fader2.oninput = function() {
-			vol2.volume = document.getElementById("fader2").value;
+			vol2.volume.rampto(document.getElementById("fader2").value, .01);
 		}
 	
 	</script>
