@@ -241,7 +241,11 @@ input[type=range][orient=vertical]
 		
 		setTransport(newTime)
 		{
-		
+			var measures = Math.floor(newTime / 4);
+			var beats = measures - newTime * 60;
+			Tone.Transport.start("0", measures + ":" + beats + ":0");
+			currentTime = newTime;
+			updateAudioProgressBar();
 		}
 		
 		function setCurrentSong(newSong)
