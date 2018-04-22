@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+	<!-- Material Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<style>
+		body{background-color: #231F20}
+		.dark-gold{color: #8E793E}
+		.light-gold{color: #AD974F}
+		.intellectual-grey{color: #231F20}
+		.light-grey{color: #EAEAEA}
+		
+		.play-button{font-size:400%}
+		
+		.material-icons{
+			-webkit-user-select: none; /* Safari */        
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE10+/Edge */
+			user-select: none; /* Standard */
+		}
+		.material-icons:active{color:#8E793E}
+		.pad-top{padding-top: 20px}
+		
+		/*Chrome*/
+
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;   
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+input[type=range][orient=vertical]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 100%;
+    padding: 0 5px;
+}
+	.modal-content{
+		background-color: #EAEAEA;
+	}
+	.controls{
+		bottom: 0;
+		position: fixed;
+		padding-top: 40px;
+		background: rgb(35,31,32);
+		background: linear-gradient(0deg, rgba(35,31,32,1) 78%, rgba(173,151,79,0) 100%);
+		z-index: 1;
+	}
+	
+	.list-group-item{
+		background-color:transparent;
+		color: #EAEAEA;
+	}
+	.list-group-item:hover{
+		background-color:transparent;
+		color: #AD974F;
+	}
+	.list-group-item:active{
+		background-color:#AD974F;
+		color: #231F20;
+	}
+	</style>
+    <title>Hello, world!</title>
+  </head>
+  <body>
+	<div class="container-fluid">
+		<br>
+		<div class="list-group list-group-flush">
+			<button class="list-group-item list-group-item-action" onclick="setCurrentSong('Will Mixing Test')">Will Mixing Test</button>
+			
+			
+		</div>
+	</div>
+	
+    <div class="container-fluid controls">
+		<div class="row">
+			<div class="col text-center">
+				<p class="light-gold" id="currentSongTitle"></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col text-right">
+				<p class="light-gold">0:00</p>
+			</div>
+			<div class="col-9">
+				<input type="range" class="slider" min="0" max="100" value="0" id="audioProgressBar" onchange="">
+			</div>
+			<div class="col text-left">
+				<p class="light-gold">3:00</p>
+			</div>
+		</div>
+		<div class="row light-gold">
+			<div class="col text-left">
+				<i data-toggle="modal" data-target="#exampleModalCenter" class="material-icons pad-top align-middle">equalizer</i>
+			</div>
+			<div class="col-6 text-center">
+				<i class="material-icons align-middle">skip_previous</i>
+				<i class="material-icons play-button align-middle">play_circle_outline</i>
+				<i class="material-icons align-middle">skip_next</i>
+			</div>
+			<div class="col text-right">
+				<i class="material-icons pad-top align-middle">file_download</i>
+			</div>
+		</div>
+		
+		
+
+		
+	</div>
+	
+	<!-- Modal -->
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" style="text-shadow: #8E793E" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true">&times;</span>
+				</button>
+			  </div>
+			  <div class="modal-body">
+				<div class="container-fluid">
+					<div class="row text-center">
+						<div class="col">
+							<input type="range" min="-76" max="6" id="fader1" orient="vertical"/>				
+						</div>
+						<div class="col">
+							<input type="range" min="-76" max="6" id="fader2" orient="vertical"/>				
+						</div>
+						<div class="col">
+							<input type="range" min="-76" max="6" id="fader3" orient="vertical"/>				
+						</div>
+						<div class="col">
+							<input type="range" min="-76" max="6" id="fader4" orient="vertical"/>				
+						</div>
+					</div>
+				<br>
+					<div class="row text-center">
+						<div class="col">
+							<button type="button" class="btn">click</button>				
+						</div>
+						<div class="col">
+							<button type="button" class="btn">music</button>				
+						</div>
+						<div class="col">
+							<button type="button" class="btn">drums</button>				
+						</div>
+						<div class="col">
+							<button type="button" class="btn">fx</button>				
+						</div>			
+					</div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  
+	<script src="Tone.min.js"></script>
+	
+	<script>
+		//put audio files into this thing
+		var player = new Tone.Player("/Wills Mixing Test 1-Click.wav").toMaster();
+		//play as soon as the buffer is loaded
+		player.autostart = true;
+		//var audioFiles = {"click":"http://localhost/Wills Mixing Test 1-Click.wav", "audio":"http://localhost/Wills Mixing Test 2-Audio.wav"};
+		//var audioFilePlayers = new Tone.Players(audioFiles, audioFilesLoaded());
+		//audioFilePlayers.toMaster();
+		
+		
+		
+		function setCurrentSong(newSong)
+		{
+			document.getElementById("currentSongTitle").innerHTML = newSong;
+			document.getElementById("audioProgressBar").value= 0;
+		}
+		
+		function audioFilesLoaded()
+		{
+			document.getElementById("currentSongTitle").innerHTML = "Audio Files Loaded";
+			audioFilePlayers.start();
+		}
+	
+	</script>
+  </body>
+</html>
