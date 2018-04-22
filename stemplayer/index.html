@@ -210,7 +210,7 @@ input[type=range][orient=vertical]
 		
 		Tone.Transport.bpm.value = 60;
 		
-		var updateAudioProgressBar = new Tone.Loop(function(time)
+		function updateAudioProgressBar()
 		{
 			//get transport time
 			var currentTime = Tone.Transport.getSecondsAtTime(); 
@@ -226,7 +226,9 @@ input[type=range][orient=vertical]
 				var seconds = time - minutes * 60;
 				document.getElementById("currentTime").innerHTML = minutes + ":" + seconds;
 			}
-		}, "4n");
+		};
+		
+		Tone.Transport.scheduleRepeat(updateAudioProgressBar, "4n", "0m");
 		
 		function setCurrentSong(newSong)
 		{
