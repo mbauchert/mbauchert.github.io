@@ -200,7 +200,7 @@ input[type=range][orient=vertical]
 	
 	<script>
 		//put audio files into this thing
-		var player = new Tone.Player("Will Mixing Test 1-Click.wav").toMaster();
+		var player = new Tone.Player("Will Mixing Test 1-Click..mp3", audioFileLoaded()).toMaster();
 		//play as soon as the buffer is loaded
 		player.autostart = true;
 		//var audioFiles = {"click":"http://localhost/Wills Mixing Test 1-Click.wav", "audio":"http://localhost/Wills Mixing Test 2-Audio.wav"};
@@ -215,10 +215,10 @@ input[type=range][orient=vertical]
 			document.getElementById("audioProgressBar").value= 0;
 		}
 		
-		function audioFilesLoaded()
+		function audioFileLoaded()
 		{
 			document.getElementById("currentSongTitle").innerHTML = "Audio Files Loaded";
-			audioFilePlayers.start();
+			//audioFilePlayers.start();
 		}
 	
 	</script>
