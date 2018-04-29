@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			body {
+				background-color: #ffffff;
+				margin: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<script src="http://threejsplaygnd.brangerbriz.net/js/three.min.js"></script>
+		<script src="http://threejsplaygnd.brangerbriz.net/js/Detector.js"></script>
+		<script src="ShaderToon.js"></script>
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			
+			var camera, scene, renderer;
+			var geometry, material, mesh;
+
+			function setup() {
+
+				var W = window.innerWidth, H = window.innerHeight;
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( W, H );
+				document.body.appendChild( renderer.domElement );
+
+				camera = new THREE.PerspectiveCamera( 15, W/H, 1, 10000 );
+				camera.position.z = 500;
+
+				scene = new THREE.Scene();
+				
+				directionalLight = new THREE.DirectionalLight(0xffffff);
+				directionalLight.position.set( 0.96, 1.78, 0 );
+				scene.add( directionalLight );
+
+				ambientLight = new THREE.AmbientLight( 0x080808 );
+				scene.add( ambientLight );				
+				
+				// paste your code from the geometryGUI here
+				map = THREE.ImageUtils.loadTexture('https://cdn.shopify.com/s/files/1/0897/6584/products/uglyman.jpg?v=1492478297');
+				geometry = new THREE.PlaneGeometry(90, 160, 3, 4);
+				material = new THREE.MeshLambertMaterial({shading: THREE.FlatShading, color: 0xdcdcdc, map: map});
+				/*\material = createShaderMaterial( "dotted", directionalLight, ambientLight );
+				material.uniforms.uBaseColor.value.setHex( 0x123456 );
+				material.uniforms.uLineColor1.value.setHex( 0xff00ff );*/
+
+map.wrapS = map.wrapT = THREE.RepeatWrapping;
+map.repeat.set( 1, 1 );				
+				
+				
+
+				for ( var i = 0; i < geometry.vertices.length; i ++ ) {
+					var vertices = [];
+					for ( var v = 0; v < geometry.vertices.length; v ++ ) {
+						vertices.push( geometry.vertices[ v ].clone() );
+						if ( v === i ) {
+							vertices[ vertices.length - 1 ].x *= 1.1;
+							vertices[ vertices.length - 1 ].y *= 1.1;
+							vertices[ vertices.length - 1 ].z *= 1.1;
+						}
+					}
+					geometry.morphTargets.push( { name: "target" + i, vertices: vertices } );
+				}
+				mesh = new THREE.Mesh(geometry, material);
+				mesh.material.morphTargets = true;
+				scene.add(mesh);				
+				
+				renderer.shadowMapEnabled = true;
+
+				spotLight1 = new THREE.SpotLight( 0xffffff, 1.1 );
+spotLight1.position.set( 14.59, -183.92, 191.04 );
+spotLight1.castShadow = true;
+spotLight1.shadowDarkness = 0.21;
+scene.add( spotLight1 );
+
+				/*spotLight2 = new THREE.SpotLight( 0xffffff, 0.1 );
+				spotLight2.position.set( 100, 1000, 100 );
+				spotLight2.castShadow = true;
+				spotLight2.shadowDarkness = 0.2;
+				scene.add( spotLight2 );*/
+
+			}
+			
+			/*function createShaderMaterial( id, light, ambientLight ) {
+					var shader = THREE.ShaderToon[ id ];
+					var u = THREE.UniformsUtils.clone( shader.uniforms );
+					var vs = shader.vertexShader;
+					var fs = shader.fragmentShader;
+					var material = new THREE.ShaderMaterial( { uniforms: u, vertexShader: vs, fragmentShader: fs } );
+					material.uniforms.uDirLightPos.value = light.position;
+					material.uniforms.uDirLightColor.value = light.color;
+					material.uniforms.uAmbientLightColor.value = ambientLight.color;
+					return material;
+			}*/
+
+			function draw() {
+				for(var v = 0; v < mesh.geometry.vertices.length; v ++ ){
+					var negOneToOne = ((100 - Math.floor(Math.random() * 200))/1000);
+  					mesh.morphTargetInfluences[ v ] = mesh.morphTargetInfluences[ v ] + negOneToOne;
+				}
+
+				requestAnimationFrame( draw );
+				
+				// experiment with code from the snippets menu here
+
+				renderer.render( scene, camera );
+
+			}
+
+			setup();
+			draw();
+
+		</script>
+		
+	</body>
+</html>

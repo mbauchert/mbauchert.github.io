@@ -10,7 +10,31 @@
 
 	<!-- Material Icons -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	
+	<style>
+.loader {
+  position: absolute;
+  left: 35%;
+  top: 50%;
+  border: 16px solid #231F20;
+  border-radius: 50%;
+  border-top: 16px solid #8E793E;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 0.5s linear infinite; /* Safari */
+  animation: spin 0.5s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
 	<style>
 		body{background-color: #231F20}
 		.dark-gold{color: #8E793E}
@@ -72,7 +96,11 @@ input[type=range][orient=vertical]
     padding: 0 5px;
 }
 	.modal-content{
-		background-color: #EAEAEA;
+		background-color: #8E793E;
+	}
+	
+	.modal-header{
+		border-bottom: 0px;
 	}
 	.controls{
 		bottom: 0;
@@ -102,7 +130,13 @@ input[type=range][orient=vertical]
 	<div class="container-fluid">
 		<br>
 		<div class="list-group list-group-flush">
-			<button class="list-group-item list-group-item-action" onclick="setCurrentSong('Will Mixing Test')">Will Mixing Test</button>
+			<script>
+				var songs = [{ "title":"Will Mixing Test","part":["1-Click","2-Audio"] }];
+				for (var i = 0; i < songs.length; i++)
+				{
+					document.write('<button class="list-group-item list-group-item-action" value="'+ i +'" onclick="setCurrentSong(value)">'+ songs[i].title +'</button>');
+				}			
+			</script>
 			
 			
 		</div>
@@ -119,15 +153,15 @@ input[type=range][orient=vertical]
 				<p class="light-gold" id="currentTime">0:00</p>
 			</div>
 			<div class="col-9">
-				<input type="range" class="slider" min="0" max="120" value="0" id="audioProgressBar" onchange="setTransport(value)">
+				<input type="range" class="slider" min="0" max="0" value="0" id="audioProgressBar" oninput="setCurrentTime(value)" onchange="setTransport(value)">
 			</div>
 			<div class="col text-left">
-				<p class="light-gold">3:00</p>
+				<p class="light-gold" id="duration">0:00</p>
 			</div>
 		</div>
 		<div class="row light-gold">
 			<div class="col text-left">
-				<i data-toggle="modal" data-target="#exampleModalCenter" class="material-icons pad-top align-middle">equalizer</i>
+				<i data-toggle="modal" data-target="#modalFaders" class="material-icons pad-top align-middle">equalizer</i>
 			</div>
 			<div class="col-6 text-center">
 				<i class="material-icons align-middle">skip_previous</i>
@@ -145,7 +179,7 @@ input[type=range][orient=vertical]
 	</div>
 	
 	<!-- Modal -->
-		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal fade" id="modalFaders" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 		  <div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 			  <div class="modal-header">
@@ -157,31 +191,31 @@ input[type=range][orient=vertical]
 				<div class="container-fluid">
 					<div class="row text-center">
 						<div class="col">
-							<input type="range" min="-76" max="6" id="fader1" orient="vertical"/>				
+							<input type="range" min="-42" max="12" id="fader0" orient="vertical" value="0" oninput="changeVolume(0)"/>				
 						</div>
 						<div class="col">
-							<input type="range" min="-76" max="6" id="fader2" orient="vertical"/>				
+							<input type="range" min="-42" max="12" id="fader1" orient="vertical" value="0" oninput="changeVolume(1)"/>				
 						</div>
 						<div class="col">
-							<input type="range" min="-76" max="6" id="fader3" orient="vertical"/>				
+							<input type="range" min="-42" max="12" id="fader2" orient="vertical" value="0" oninput="changeVolume(2)"/>				
 						</div>
 						<div class="col">
-							<input type="range" min="-76" max="6" id="fader4" orient="vertical"/>				
+							<input type="range" min="-42" max="12" id="fader3" orient="vertical" value="0"oninput="changeVolume(3)"/>				
 						</div>
 					</div>
 				<br>
 					<div class="row text-center">
 						<div class="col">
-							<button type="button" class="btn">click</button>				
+							<button type="button" class="btn" value="1" id="toggle0" onclick="toggleChannel(0)"></button>				
 						</div>
 						<div class="col">
-							<button type="button" class="btn">music</button>				
+							<button type="button" class="btn" value="1" id="toggle1" onclick="toggleChannel(1)"></button>				
 						</div>
 						<div class="col">
-							<button type="button" class="btn">drums</button>				
+							<button type="button" class="btn" value="1" id="toggle2" onclick="toggleChannel(2)"></button>				
 						</div>
 						<div class="col">
-							<button type="button" class="btn">fx</button>				
+							<button type="button" class="btn" value="1" id="toggle3" onclick="toggleChannel(3)"></button>				
 						</div>			
 					</div>
 				</div>
@@ -189,6 +223,16 @@ input[type=range][orient=vertical]
 			</div>
 		  </div>
 		</div>
+		
+		
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document" >    
+		<div class="loader text-center"></div>        
+      
+  </div>
+</div>
+		
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -199,71 +243,105 @@ input[type=range][orient=vertical]
 	<script src="Tone.min.js"></script>
 	
 	<script>
+		var shortAlphabet = ['a','b','c','d'];
 		//put audio files into this thing
-		var players = new Tone.Players({"click":"Will Mixing Test 1-Click.mp3", "audio":"Will Mixing Test 2-Audio.mp3"}, audioFileLoaded());
-		//play as soon as the buffer is loaded
-		var vol1 = new Tone.Volume(0);
-		players.get("click").chain(vol1, Tone.Master);
-		var vol2 = new Tone.Volume(0);
-		players.get("audio").chain(vol2, Tone.Master);
+		var players = new Tone.Players({"a":"_.mp3","b":"_.mp3","c":"_.mp3","d":"_.mp3"});
+		players.toMaster();
 		
-		players.get("click").sync().start(0);
-		players.get("audio").sync().start(0);
-		//var audioFiles = {"click":"http://localhost/Wills Mixing Test 1-Click.wav", "audio":"http://localhost/Wills Mixing Test 2-Audio.wav"};
-		//var audioFilePlayers = new Tone.Players(audioFiles, audioFilesLoaded());
-		//audioFilePlayers.toMaster();
-		
+		//set bpm to be one beat per second
 		Tone.Transport.bpm.value = 60;
-		var currentTime = 0;
-		
-		function updateAudioProgressBar()
-		{
-			//get transport time
-			currentTime++; 
-			//update progress bar
-			document.getElementById("audioProgressBar").value = currentTime;
-			//update current time
-			if(currentTime < 10)
-			{
-				document.getElementById("currentTime").innerHTML = "00:0" + currentTime;
-			} else if (currentTime < 60)
-			{
-				document.getElementById("currentTime").innerHTML = "00:" + currentTime;
-			} else
-			{
-				var minutes = Math.floor(time / 60);
-				var seconds = time - minutes * 60;
-				document.getElementById("currentTime").innerHTML = minutes + ":" + seconds;
-			}
-		};
-		
-		Tone.Transport.scheduleRepeat(updateAudioProgressBar, "4n", "0m");
-		
-		setTransport(newTime)
-		{
-			var measures = Math.floor(newTime / 4);
-			var beats = measures - newTime * 60;
-			Tone.Transport.start("0", measures + ":" + beats + ":0");
-			currentTime = newTime;
-			updateAudioProgressBar();
-		}
 		
 		function setCurrentSong(newSong)
 		{
-			document.getElementById("currentSongTitle").innerHTML = newSong;
-			document.getElementById("audioProgressBar").value= 0;
+			$('#loadingModal').modal('show');
+			Tone.Transport.stop();
+			//load new url into buffers
+			for(var i = 0; i< 4; i++)
+			{
+				var newPart = songs[newSong].part[i];
+
+				if(newPart != undefined)//if there is a track to load
+				{
+					players.get(shortAlphabet[i]).load(songs[newSong].title+' '+newPart+'.mp3');
+					players.get(shortAlphabet[i]).sync().start(0);
+					document.getElementById("toggle"+i).innerHTML = newPart;
+				}
+				else //if there is no track to load
+				{
+					//set unused players to _.mp3
+					players.get(shortAlphabet[i]).load("_.mp3");
+					document.getElementById("toggle"+i).innerHTML = "";
+				}
+			}
+			
+			//when all buffers are loaded.
+			Tone.Buffer.on('load', function(){				
+				//set song title
+				document.getElementById("currentSongTitle").innerHTML = songs[newSong].title;
+				//set audio progress bar back to 0
+				document.getElementById("audioProgressBar").value= 0;	
+				//set the length of the song
+				var bufferDuration = players.get("a").buffer.duration;
+				document.getElementById("audioProgressBar").max = Math.round(bufferDuration);
+				bufferDuration = secondsToTime(bufferDuration);
+				//set progress bar legnth and duration legnth
+				document.getElementById("duration").innerHTML = bufferDuration;
+				$('#loadingModal').modal('hide');
+			});	
+			
+		}//end set new song
+		
+		//AUDIO PROGRESS BAR
+		var disableProgressBarUpdate = false;
+		
+		function secondsToTime(time)
+		{
+			time = Math.round(time);
+			
+			var minutes = Math.floor(time / 60);
+			var seconds = time%60;
+			
+			if(seconds < 10)
+			{
+				return(minutes+":0" + seconds);
+			} else
+			{
+				return (minutes + ":" + seconds);
+			}
 		}
 		
-		function audioFileLoaded()
+		function updateAudioProgressBar()
 		{
-			document.getElementById("currentSongTitle").innerHTML = "Audio Files Loaded";
-			//audioFilePlayers.start();
+			if(disableProgressBarUpdate == false)
+			{
+				//get transport time
+				var currentTime = Math.round(Tone.Transport.getSecondsAtTime()); 
+				//update progress bar
+				document.getElementById("audioProgressBar").value = currentTime;
+				document.getElementById("currentTime").innerHTML = secondsToTime(currentTime);
+			}
 		}
+		
+		Tone.Transport.scheduleRepeat(updateAudioProgressBar, "4n", "0m");
+		
+		//on change
+		function setTransport(newTime)
+		{
+			Tone.Transport.seconds = newTime;
+			disableProgressBarUpdate = false;
+		}
+		
+		//on input
+		function setCurrentTime(newTime)
+		{
+			disableProgressBarUpdate = true;
+			document.getElementById("currentTime").innerHTML = secondsToTime(newTime);
+		}
+		//end audio progress bar
 		
 		function playButton()
 		{
 			var playState = document.getElementById("playButton").innerHTML;
-			
 			if(playState == "play_circle_outline")
 			{
 				Tone.Transport.start();
@@ -274,12 +352,22 @@ input[type=range][orient=vertical]
 			}
 		}
 		
-		fader1.oninput = function() {
-			vol1.volume.rampto(document.getElementById("fader1").value, .01);
+		function changeVolume(channel)
+		{
+			players.get(shortAlphabet[channel]).volume.value = document.getElementById("fader"+channel).value;
 		}
 		
-		fader2.oninput = function() {
-			vol2.volume.rampto(document.getElementById("fader2").value, .01);
+		function toggleChannel(channel)
+		{
+			var player = shortAlphabet[channel];
+			if(document.getElementById("toggle"+channel).value == 1)
+			{
+				players.get(player).mute = true;
+				document.getElementById("toggle"+channel).value = 0;
+			} else {
+				players.get(player).mute = false;
+				document.getElementById("toggle"+channel).value = 1;
+			}
 		}
 	
 	</script>
