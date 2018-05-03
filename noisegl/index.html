@@ -142,6 +142,12 @@
 			resonance.frequency.value = freq;
 		}
 		
+		//CHORUS
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		var chorus = new Tone.Chorus(10, 3.5, Math.random());
+		var LFOTypes = ["sine", "square", "sawtooth", "triangle"]
+		chorus.type.value = LFOTypes[Math.floor(Math.random() * 4)];
+		
 		//PITCH
 		//~~~~~~~~~~~~~~~~~~~~~~
 		var pitchShift = new Tone.PitchShift(0);
@@ -152,7 +158,7 @@
 		
 		//SLIDERS
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		var sliderValues = [[0, 50, 100],
+		var sliderValues = [[0, 3, 10],
 							[250, 2390, 22000],
 							[-48, 0, 48]];
 		var sliders = document.getElementsByClassName('sliders');
@@ -171,9 +177,10 @@
 				orientation: 'vertical'
 			});
 			slider.noUiSlider.on('update', function () {
-				if(index == 0)//distortion
+				if(index == 0)//distortion and modulation
 				{
-					crossFade.fade.value = (slider.noUiSlider.get()/100);
+					crossFade.fade.value = (slider.noUiSlider.get()/10);
+					chorus.frequency.value = slider.noUiSlider.get();
 				} else if(index == 1)//filter
 				{
 					filter.changeFrequency(slider.noUiSlider.get());
@@ -253,9 +260,10 @@
 			//opening the input asks the user to activate their mic
 			micInput.open().then(function(){
 				//promise resolves when input is available
-				micInput.chain(distortion, filter, pitchShift, analyzer, obsceneVol);
-				setup();
-				draw();
+				var fx = [distortion,filter,pitchShift,chorus];
+				fx.sort(function() { return 0.5 - Math.random() });//shuffle the array
+								
+				micInput.chain(fx[0], fx[1], fx[2], fx[3], analyzer, obsceneVol);				
 			});					
 		})
 		
@@ -284,7 +292,7 @@
 				scene = new THREE.Scene();					
 				
 				// paste your code from the geometryGUI here
-				map = THREE.ImageUtils.loadTexture('https://cdn.shopify.com/s/files/1/0897/6584/products/uglyman.jpg?v=1492478297');
+				map = THREE.ImageUtils.loadTexture('https://mbauchert.github.io/noisegl/images/'+Math.floor(Math.random() * 9)+'.jpg');
 				geometry = new THREE.PlaneGeometry(90, 160, 3, 7);
 				material = new THREE.MeshBasicMaterial({shading: THREE.FlatShading, color: 0xdcdcdc, map: map});
 
@@ -320,7 +328,6 @@
 					//var negOneToOne = ((100 - Math.floor(Math.random() * 200))/1000);
   					//mesh.morphTargetInfluences[ v ] = mesh.morphTargetInfluences[ v ] + negOneToOne;
 					var negOneToOne = ((fft[v] * -1)/30);
-					console.log(negOneToOne);
 					mesh.morphTargetInfluences[ v ] = negOneToOne;
 				}
 
@@ -330,7 +337,9 @@
 
 				renderer.render( scene, camera );
 			}
-
+			
+			setup();
+			draw();
 			
 
 		</script>
