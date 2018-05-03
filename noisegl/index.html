@@ -178,23 +178,23 @@
 		var a = new Interface.Panel({ 
 		  container:document.querySelector("#sliderPanel") 
 		});
-		var accelerometer = new Interface.Accelerometer({
-		  onvaluechange : function(_x,_y,_z) {
-			x.setValue(_x);
-			y.setValue(_y);
-			z.setValue(_z);        
+		var accelerometer = new Interface.Orientation({
+		  onvaluechange : function(_pitch,_roll,_yaw,_heading) {
+			pitch.setValue(_pitch);
+			roll.setValue(_roll);
+			yaw.setValue(_yaw);        
 		  }
 		}).start();
-		var x = new Interface.Slider({
-		  //label: 'x',  
+		var pitch = new Interface.Slider({
+		  //label: 'pitch',  
 		  bounds:[.0,.0,.34,1],
 		  onvaluechange: function()
 		  {
 			crossFade.fade.value = this.value;
 		  }		  
 		});
-		var y = new Interface.Slider({
-		  //label: 'y',  
+		var roll = new Interface.Slider({
+		  //label: 'roll',  
 		  bounds:[.34,.0,.33,1],
 		  onvaluechange: function()
 		  {
@@ -208,8 +208,8 @@
 			filter.changeFrequency(newValue);
 		  }
 		});
-		var z = new Interface.Slider({
-		  //label: 'z',  
+		var yaw = new Interface.Slider({
+		  //label: 'yaw',  
 		  bounds:[.67,.0,.34,1],
 		  onvaluechange: function()
 		  {
@@ -217,7 +217,7 @@
 		  }
 		});
 		a.background = 'transparent';
-		a.add(x,y,z);
+		a.add(pitch,roll,yaw);
 		
 		//MAX THE VOLUME
 		//~~~~~~~~~~~~~~~~
