@@ -24,9 +24,19 @@
 		{
 			height: 100%;
 		}
-		
+		.fill-page
+		{
+			height: 100%;
+			padding: 0px;
+		}
 		.sliders {
 			height: 100%;
+			margin: auto;
+		}
+		
+		.interfaceSliders {
+			height: 100%;
+			width: 100%
 			margin: auto;
 		}
 	</style>
@@ -43,8 +53,9 @@
 	  </div>
 	</div>
 
-    <div class="container-fluid max-height">
-		<div class="row max-height" style="padding-top: 10%; padding-bottom: 10%">
+    <div class="container-fluid fill-page">
+		<div id="sliderPanel" class="interfaceSliders"></div>
+		<!--<div class="row max-height" style="padding-top: 10%; padding-bottom: 10%">
 			<div class="col-4">
 				<div id="slider0" class="sliders"></div>	
 			</div>
@@ -53,8 +64,9 @@
 			</div>
 			<div class="col-4">
 				<div id="slider2" class="sliders"></div>	
-			</div>	
-		</div>
+			</div>
+			
+		</div>-->
 	</div>
 
     <!-- Optional JavaScript -->
@@ -66,6 +78,7 @@
 	<script src="nouislider.js"></script>
 	<script src="StartAudioContext.js"></script>
 	<script src="Tone.min.js"></script>
+	<script src="interface.min.js"></script>
 	<script>
 
 		Tone.context.latencyHint = 'playback';
@@ -130,7 +143,7 @@
 		
 		//SLIDERS
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		var sliderValues = [[0, 50, 100],
+		/*var sliderValues = [[0, 50, 100],
 							[250, 2390, 22000],
 							[-48, 0, 48]];
 		var sliders = document.getElementsByClassName('sliders');
@@ -160,7 +173,51 @@
 					pitchShift.pitch = slider.noUiSlider.get();
 				}					
 			});
+		});*/
+		
+		var a = new Interface.Panel({ 
+		  container:document.querySelector("#sliderPanel") 
 		});
+		var accelerometer = new Interface.Accelerometer({
+		  onvaluechange : function(_x,_y,_z) {
+			x.setValue(_x);
+			y.setValue(_y);
+			z.setValue(_z);        
+		  }
+		}).start();
+		var x = new Interface.Slider({
+		  //label: 'x',  
+		  bounds:[.0,.0,.34,1],
+		  onvaluechange: function()
+		  {
+			crossFade.fade.value = this.value;
+		  }		  
+		});
+		var y = new Interface.Slider({
+		  //label: 'y',  
+		  bounds:[.34,.0,.33,1],
+		  onvaluechange: function()
+		  {
+			var minv = Math.log(150);
+			var maxv = Math.log(22000);
+
+			// calculate adjustment factor
+			var scale = (maxv-minv);
+
+			var newValue = Math.exp(minv + scale*(this.value));
+			filter.changeFrequency(newValue);
+		  }
+		});
+		var z = new Interface.Slider({
+		  //label: 'z',  
+		  bounds:[.67,.0,.34,1],
+		  onvaluechange: function()
+		  {
+			pitchShift.pitch = Math.floor((this.value * 96) - 48);
+		  }
+		});
+		a.background = 'transparent';
+		a.add(x,y,z);
 		
 		//MAX THE VOLUME
 		//~~~~~~~~~~~~~~~~
