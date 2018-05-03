@@ -44,6 +44,9 @@
 	</div>
 
     <div class="container-fluid max-height">
+		<div class="row">
+			<p id="distortion"></p>
+		</div>
 		<div class="row max-height" style="padding-top: 10%; padding-bottom: 10%">
 			<div class="col-4">
 				<div id="slider0" class="sliders"></div>	
@@ -79,7 +82,7 @@
 							   ["Distortion",[30,100]]];
 							   
 			var randomPick = distortions[Math.floor(Math.random() * 3)];
-			console.log(randomPick[0]);
+			document.getElementById("distortion").innerHTML = document.getElementById("distortion").innerHTML +randomPick[0];
 			var randomSetting = Math.floor((Math.random() * randomPick[1][1]) + randomPick[1][0]);
 			if (randomSetting[0] == "Distortion")
 				randomSetting = randomSetting/100;			
