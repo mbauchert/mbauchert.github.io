@@ -159,6 +159,13 @@
 				}					
 			});
 		});
+		
+		//MAX THE VOLUME
+		//~~~~~~~~~~~~~~~~
+		var obsceneVol = new Tone.Volume(36);
+		var limiter = new Tone.Limiter(0);
+		
+		obsceneVol.chain(limiter, Tone.Master);
 	
 		//START AUDIO
 		//~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,7 +176,7 @@
 			//opening the input asks the user to activate their mic
 			micInput.open().then(function(){
 				//promise resolves when input is available
-				micInput.chain(distortion, filter, pitchShift, Tone.Master);
+				micInput.chain(distortion, filter, pitchShift, obsceneVol);
 			});					
 		})
 		
