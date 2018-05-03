@@ -37,7 +37,7 @@
 	  <div class="modal-dialog modal-dialog-centered" role="document" > 
 			<div class="modal-content" style="background-color: transparent; border: 0px;">
 				<div class="container-fluid">
-					<button type="button" class="btn btn-primary btn-lg btn-block">Awful Noises</button>
+					<button type="button" class="btn btn-primary btn-lg btn-block" onclick="$('#startContextModal').modal('hide')">Awful Noises</button>
 				</div>
 			</div>
 	  </div>
@@ -165,7 +165,7 @@
 		$('#startContextModal').modal('show');
 		StartAudioContext(Tone.context, '#startContextModal').then(function(){
 			//started
-			$('#startContextModal').modal('hide');
+			
 			//opening the input asks the user to activate their mic
 			micInput.open().then(function(){
 				//promise resolves when input is available
