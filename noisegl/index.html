@@ -40,6 +40,14 @@
 			margin: auto;
 		}
 	</style>
+	<style>		
+		.background{
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -100;
+		}
+	</style>
   </head>
   <body>
 	<!-- Modal Start Audio -->
@@ -54,8 +62,8 @@
 	</div>
 
     <div class="container-fluid fill-page">
-		<div id="sliderPanel" class="interfaceSliders"></div>
-		<!--<div class="row max-height" style="padding-top: 10%; padding-bottom: 10%">
+		<!--<div id="sliderPanel" class="interfaceSliders"></div>-->
+		<div class="row max-height" style="padding-top: 10%; padding-bottom: 10%">
 			<div class="col-4">
 				<div id="slider0" class="sliders"></div>	
 			</div>
@@ -64,10 +72,11 @@
 			</div>
 			<div class="col-4">
 				<div id="slider2" class="sliders"></div>	
-			</div>
-			
-		</div>-->
+			</div>			
+		</div>
 	</div>
+	
+	<div class="background" id="background"></div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -143,7 +152,7 @@
 		
 		//SLIDERS
 		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		/*var sliderValues = [[0, 50, 100],
+		var sliderValues = [[0, 50, 100],
 							[250, 2390, 22000],
 							[-48, 0, 48]];
 		var sliders = document.getElementsByClassName('sliders');
@@ -173,20 +182,21 @@
 					pitchShift.pitch = slider.noUiSlider.get();
 				}					
 			});
-		});*/
-		
-		var a = new Interface.Panel({ 
-		  container:document.querySelector("#sliderPanel") 
 		});
-		var accelerometer = new Interface.Orientation({
+		
+		/*var a = new Interface.Panel({ 
+		  container:document.querySelector("#sliderPanel")
+		});
+		/*var accelerometer = new Interface.Orientation({
 		  onvaluechange : function(_pitch,_roll,_yaw,_heading) {
 			pitch.setValue(_pitch);
 			roll.setValue(_roll);
 			yaw.setValue(_yaw);        
 		  }
-		}).start();
+		}).start();/
 		var pitch = new Interface.Slider({
-		  //label: 'pitch',  
+		  //label: 'pitch', 
+		  //background: "transparent",
 		  bounds:[.0,.0,.34,1],
 		  onvaluechange: function()
 		  {
@@ -194,7 +204,8 @@
 		  }		  
 		});
 		var roll = new Interface.Slider({
-		  //label: 'roll',  
+		  //label: 'roll',
+		  //background: "transparent",
 		  bounds:[.34,.0,.33,1],
 		  onvaluechange: function()
 		  {
@@ -209,15 +220,18 @@
 		  }
 		});
 		var yaw = new Interface.Slider({
-		  //label: 'yaw',  
+		  //label: 'yaw',
+		  background: "#fff0",
+		  fill: "#00000052",
 		  bounds:[.67,.0,.34,1],
 		  onvaluechange: function()
 		  {
 			pitchShift.pitch = Math.floor((this.value * 96) - 48);
 		  }
 		});
+		//yaw.background = 'transparent'
 		a.background = 'transparent';
-		a.add(pitch,roll,yaw);
+		a.add(pitch,roll,yaw);*/
 		
 		//MAX THE VOLUME
 		//~~~~~~~~~~~~~~~~
@@ -225,6 +239,10 @@
 		var limiter = new Tone.Limiter(0);
 		
 		obsceneVol.chain(limiter, Tone.Master);
+		
+		//ANALYZER
+		//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		var analyzer = new Tone.Analyser("fft", 32);
 	
 		//START AUDIO
 		//~~~~~~~~~~~~~~~~~~~~~~~~
@@ -235,11 +253,87 @@
 			//opening the input asks the user to activate their mic
 			micInput.open().then(function(){
 				//promise resolves when input is available
-				micInput.chain(distortion, filter, pitchShift, obsceneVol);
+				micInput.chain(distortion, filter, pitchShift, analyzer, obsceneVol);
+				setup();
+				draw();
 			});					
 		})
 		
 	</script>
+	
+	<script src="http://threejsplaygnd.brangerbriz.net/js/three.min.js"></script>
+		<script src="http://threejsplaygnd.brangerbriz.net/js/Detector.js"></script>
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			
+			var camera, scene, renderer;
+			var geometry, material, mesh;
+
+			function setup() {
+
+				var W = window.innerWidth, H = window.innerHeight;
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( W, H );
+				document.getElementById("background").appendChild( renderer.domElement );
+				
+
+				camera = new THREE.PerspectiveCamera( 15, W/H, 1, 10000 );
+				camera.position.z = 500;
+
+				scene = new THREE.Scene();					
+				
+				// paste your code from the geometryGUI here
+				map = THREE.ImageUtils.loadTexture('https://cdn.shopify.com/s/files/1/0897/6584/products/uglyman.jpg?v=1492478297');
+				geometry = new THREE.PlaneGeometry(90, 160, 3, 7);
+				material = new THREE.MeshBasicMaterial({shading: THREE.FlatShading, color: 0xdcdcdc, map: map});
+
+				map.wrapS = map.wrapT = THREE.RepeatWrapping;
+				map.repeat.set( 1, 1 );					
+
+				for ( var i = 0; i < geometry.vertices.length; i ++ ) {
+					var vertices = [];
+					for ( var v = 0; v < geometry.vertices.length; v ++ ) {
+						vertices.push( geometry.vertices[ v ].clone() );
+						if ( v === i ) {
+							vertices[ vertices.length - 1 ].x *= 1.1;
+							vertices[ vertices.length - 1 ].y *= 1.1;
+							vertices[ vertices.length - 1 ].z *= 1.1;
+						}
+					}
+					geometry.morphTargets.push( { name: "target" + i, vertices: vertices } );
+				}
+				mesh = new THREE.Mesh(geometry, material);
+				mesh.material.morphTargets = true;
+				scene.add(mesh);				
+				
+				
+
+				spotLight1 = new THREE.SpotLight( 0xffffff, 1.1 );
+				spotLight1.position.set( 14.59, -183.92, 191.04 );				
+				scene.add( spotLight1 );
+			}
+			function draw() {
+				var fft = analyzer.getValue();	
+				//console.log(mesh.geometry.vertices.length);
+				for(var v = 0; v < mesh.geometry.vertices.length; v ++ ){
+					//var negOneToOne = ((100 - Math.floor(Math.random() * 200))/1000);
+  					//mesh.morphTargetInfluences[ v ] = mesh.morphTargetInfluences[ v ] + negOneToOne;
+					var negOneToOne = ((fft[v] * -1)/30);
+					console.log(negOneToOne);
+					mesh.morphTargetInfluences[ v ] = negOneToOne;
+				}
+
+				requestAnimationFrame( draw );
+				
+				// experiment with code from the snippets menu here
+
+				renderer.render( scene, camera );
+			}
+
+			
+
+		</script>
 	
   </body>
 </html>
