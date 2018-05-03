@@ -79,7 +79,6 @@
 							   ["Distortion",[30,100]]];
 							   
 			var randomPick = distortions[Math.floor(Math.random() * 3)];
-			document.getElementById("distortion").innerHTML = document.getElementById("distortion").innerHTML +randomPick[0];
 			var randomSetting = Math.floor((Math.random() * randomPick[1][1]) + randomPick[1][0]);
 			if (randomSetting[0] == "Distortion")
 				randomSetting = randomSetting/100;			
