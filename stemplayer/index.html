@@ -10,6 +10,7 @@
 
 	<!-- Material Icons -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="nouislider.min.css" rel="stylesheet">
 	<style>
 .loader {
   position: absolute;
@@ -55,90 +56,56 @@
 		
 		/*Chrome*/
 
+		.sliders {
+			height: 100%;
+			margin: auto;
+		}
 
-.slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    border-radius: 2px;   
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%; 
-    background: #4CAF50;
-    cursor: pointer;
-}
-
-
-.slider::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-}
-
-input[type=range][orient=vertical]
-{
-    writing-mode: bt-lr; /* IE */
-    -webkit-appearance: slider-vertical; /* WebKit */
-    width: 8px;
-    height: 100%;
-    padding: 0 5px;
-}
-	.modal-content{
-		background-color: #8E793E;
-	}
-	
-	.modal-header{
-		border-bottom: 0px;
-	}
-	.controls{
-		bottom: 0;
-		position: fixed;
-		padding-top: 40px;
-		background: rgb(35,31,32);
-		background: linear-gradient(0deg, rgba(35,31,32,1) 78%, rgba(173,151,79,0) 100%);
-		z-index: 1;
-	}
-	
-	.list-group-item{
-		background-color:transparent;
-		color: #EAEAEA;
-	}
-	.list-group-item:hover{
-		background-color:transparent;
-		color: #AD974F;
-	}
-	.list-group-item:active{
-		background-color:#AD974F;
-		color: #231F20;
-	}
+		.modal-content{
+			background-color: #8E793E;
+		}
+		
+		.modal-header{
+			border-bottom: 0px;
+		}
+		.controls{
+			bottom: 0;
+			position: fixed;
+			padding-top: 40px;
+			background: rgb(35,31,32);
+			background: linear-gradient(0deg, rgba(35,31,32,1) 78%, rgba(173,151,79,0) 100%);
+			z-index: 1;
+		}
+		
+		.list-group-item{
+			background-color:transparent;
+			color: #EAEAEA;
+		}
+		.list-group-item:hover{
+			background-color:transparent;
+			color: #AD974F;
+		}
+		.list-group-item:active{
+			background-color:#AD974F;
+			color: #231F20;
+		}
 	</style>
-    <title>Hello, world!</title>
+    <title>Stem Player</title>
   </head>
   <body>
+	<audio loop>
+		<source src="" type="audio/ogg">
+		Your browser does not support the audio element.
+	</audio>
+	
 	<div class="container-fluid">
 		<br>
 		<div class="list-group list-group-flush">
-			<script>
-				var songs = [{ "title":"Will Mixing Test","part":["1-Click","2-Audio"] },
-							 { "title":"ForAFriend", "part":["Playback","Vocals","FX"]}];
-				for (var i = 0; i < songs.length; i++)
-				{
-					document.write('<button class="list-group-item list-group-item-action" value="'+ i +'" onclick="setCurrentSong(value)">'+ songs[i].title +'</button>');
-				}			
-			</script>
-			
+			<!--List of Songs, Loops, etc. -->
+			<button class="list-group-item list-group-item-action songButton" id="Bored Loop" value="Bored Loop" onclick="setCurrentSong(value)">Bored Loop</button>
+			<button class="list-group-item list-group-item-action songButton" id="Psionic" value="Psionic" onclick="setCurrentSong(value)">Psionic</button>
+			<button class="list-group-item list-group-item-action songButton" id="Poltergeist" value="Poltergeist" onclick="setCurrentSong(value)">Poltergeist</button>
+			<button class="list-group-item list-group-item-action songButton" id="Bottom of the Barrel" value="Bottom of the Barrel" onclick="setCurrentSong(value)">Bottom of the Barrel</button>
 			
 		</div>
 	</div>
@@ -154,7 +121,7 @@ input[type=range][orient=vertical]
 				<p class="light-gold" id="currentTime">0:00</p>
 			</div>
 			<div class="col-8">
-				<input type="range" class="slider" min="0" max="0" value="0" id="audioProgressBar" oninput="setCurrentTime(value)" onchange="setTransport(value)">
+				<div id="playbackSlider" class="playbackSlider"></div>
 			</div>
 			<div class="col-2 text-left">
 				<p class="light-gold" id="duration">0:00</p>
@@ -170,7 +137,7 @@ input[type=range][orient=vertical]
 				<i class="material-icons align-middle">skip_next</i>
 			</div>
 			<div class="col text-right">
-				<i class="material-icons pad-top align-middle">file_download</i>
+				<i class="material-icons pad-top align-middle" onclick="loopButton()" id="loopButton">sync</i>
 			</div>
 		</div>
 		
@@ -190,33 +157,33 @@ input[type=range][orient=vertical]
 			  </div>
 			  <div class="modal-body">
 				<div class="container-fluid">
-					<div class="row text-center">
+					<div class="row text-center" style="height:375px">
 						<div class="col">
-							<input type="range" min="-42" max="12" id="fader0" orient="vertical" value="0" oninput="changeVolume(0)"/>				
+							<div id="slider0" class="sliders"></div>				
 						</div>
 						<div class="col">
-							<input type="range" min="-42" max="12" id="fader1" orient="vertical" value="0" oninput="changeVolume(1)"/>				
+							<div id="slider1" class="sliders"></div>				
 						</div>
 						<div class="col">
-							<input type="range" min="-42" max="12" id="fader2" orient="vertical" value="0" oninput="changeVolume(2)"/>				
+							<div id="slider2" class="sliders"></div>				
 						</div>
 						<div class="col">
-							<input type="range" min="-42" max="12" id="fader3" orient="vertical" value="0"oninput="changeVolume(3)"/>				
+							<div id="slider2" class="sliders"></div>
 						</div>
 					</div>
 				<br>
 					<div class="row text-center">
 						<div class="col">
-							<button type="button" class="btn" value="1" id="toggle0" onclick="toggleChannel(0)"></button>				
+							<button type="button" class="btn" value="1" id="toggle0" onclick="toggleChannel(0,1)"><i class="material-icons align-middle">alarm</i></button>				
 						</div>
 						<div class="col">
-							<button type="button" class="btn" value="1" id="toggle1" onclick="toggleChannel(1)"></button>				
+							<button type="button" class="btn" value="1" id="toggle1" onclick="toggleChannel(2,3)"><i class="material-icons align-middle">vertical_align_top</i></button>				
 						</div>
 						<div class="col">
-							<button type="button" class="btn" value="1" id="toggle2" onclick="toggleChannel(2)"></button>				
+							<button type="button" class="btn" value="1" id="toggle2" onclick="toggleChannel(4,5)"><i class="material-icons align-middle">vertical_align_center</i></button>				
 						</div>
 						<div class="col">
-							<button type="button" class="btn" value="1" id="toggle3" onclick="toggleChannel(3)"></button>				
+							<button type="button" class="btn" value="1" id="toggle3" onclick="toggleChannel(6,7)"><i class="material-icons align-middle">vertical_align_bottom</i></button>				
 						</div>			
 					</div>
 				</div>
@@ -242,59 +209,166 @@ input[type=range][orient=vertical]
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
   
 	<script src="Tone.min.js"></script>
+	<script src="nouislider.min.js"></script>
 	
-	<script>
-		var shortAlphabet = ['a','b','c','d'];
-		//put audio files into this thing
-		var players = new Tone.Players({"a":"_.mp3","b":"_.mp3","c":"_.mp3","d":"_.mp3"});
-		players.toMaster();
+	<script>		
+		//set up audio player and faders
+		var audioPlayer = document.querySelector('audio');
+		var source = Tone.context.createMediaElementSource(audioPlayer);
 		
-		//set bpm to be one beat per second
-		Tone.Transport.bpm.value = 60;
+		var splitter = Tone.context.createChannelSplitter(8);
+		source.connect(splitter);
+		
+		var fader = new Array();
+		for(var i=0; i<4; i++)
+		{
+			fader[i] = new Tone.Volume();
+		}
+		
+		var merger = new Array();
+		for(var i=0; i<4; i++)
+		{
+			merger[i] = Tone.context.createChannelMerger(2);
+		}
+
+		splitter.connect(merger[0], 0, 0);//vox
+		splitter.connect(merger[0], 2, 1);//vox		
+		
+		splitter.connect(merger[1], 3, 0);//bass
+		splitter.connect(merger[1], 5, 1);//bass
+		
+		splitter.connect(merger[2], 4, 0);//drums
+		splitter.connect(merger[2], 7, 1);//drums		
+		
+		splitter.connect(merger[3], 6, 0);//guitar
+		splitter.connect(merger[3], 1, 1);//guitar
+		
+		
+		for(var i=0; i<4; i++)
+		{
+			merger[i].chain(fader[i], Tone.Master);
+		}	
+		
+		//Volume Sliders		
+		var sliders = document.getElementsByClassName('sliders');
+		[].slice.call(sliders).forEach(function( slider, index ){
+
+			noUiSlider.create(slider, {
+				start: 0,
+				connect: true,
+				range: {
+					'min': -72,
+					'50%': -12,
+					'max': 6
+				},
+				// Put '0' at the bottom of the slider
+				direction: 'rtl',
+				orientation: 'vertical'
+			});
+			slider.noUiSlider.on('update', function () {
+				fader[index].volume.value = slider.noUiSlider.get();
+			});
+		});
+		
+		var playbackSlider = document.getElementById('playbackSlider');
+
+		noUiSlider.create(playbackSlider, {
+			start: 0,			
+			connect: [true, false],
+			step: 1,
+			range: {
+			  'min': 0,
+			  'max': 1
+			}
+			//oninput="setCurrentTime(value)" onchange="setTransport(value)"
+		});
+		
+		//keep slider from changing while being dragged
+		var userSliding = false;
+		playbackSlider.noUiSlider.on('start', function () {
+			userSliding = true;
+		});
+		
+		//Jump to new time upon release of slider
+		playbackSlider.noUiSlider.on('change', function () {
+			var newTime = playbackSlider.noUiSlider.get();
+			audioPlayer.currentTime = newTime;
+			userSliding = false;			
+		});
+		
+		//get all the song buttons
+		var songButtons = document.getElementsByClassName('songButton');
+		//init first song
+		setCurrentSong(songButtons[0].value);
+		audioPlayer.autoplay = false;
 		
 		function setCurrentSong(newSong)
 		{
-			$('#loadingModal').modal('show');
-			Tone.Transport.stop();
-			//load new url into buffers
-			for(var i = 0; i< 4; i++)
+			//set new song if pressed butotn != current song 
+			if(newSong != audioPlayer.currentSrc)
 			{
-				var newPart = songs[newSong].part[i];
-
-				if(newPart != undefined)//if there is a track to load
-				{
-					players.get(shortAlphabet[i]).load(songs[newSong].title+' '+newPart+'.mp3');
-					players.get(shortAlphabet[i]).sync().start(0);
-					document.getElementById("toggle"+i).innerHTML = newPart;
-				}
-				else //if there is no track to load
-				{
-					//set unused players to _.mp3
-					players.get(shortAlphabet[i]).load("_.mp3");
-					document.getElementById("toggle"+i).innerHTML = "";
-				}
+				audioPlayer.src = "./stemPlayerOGGs/"+newSong+".ogg";
+				document.getElementById("currentSongTitle").innerHTML = newSong;
+			}	
+			if(audioPlayer.paused == true)
+			{
+				console.log("setSong");
+				audioPlayer.autoplay = true;
 			}
-			
-			//when all buffers are loaded.
-			Tone.Buffer.on('load', function(){				
-				//set song title
-				document.getElementById("currentSongTitle").innerHTML = songs[newSong].title;
-				//set audio progress bar back to 0
-				document.getElementById("audioProgressBar").value= 0;
-				document.getElementById("currentTime").innerHTML = "0:00";
-				//set the length of the song
-				var bufferDuration = players.get("a").buffer.duration;
-				document.getElementById("audioProgressBar").max = Math.round(bufferDuration);
-				bufferDuration = secondsToTime(bufferDuration);
-				//set progress bar legnth and duration legnth
-				document.getElementById("duration").innerHTML = bufferDuration;
-				$('#loadingModal').modal('hide');
-			});	
-			
 		}//end set new song
 		
-		//AUDIO PROGRESS BAR
-		var disableProgressBarUpdate = false;
+		//Change Time While Playing
+		audioPlayer.ontimeupdate = function() {setCurrentTime()}		
+		function setCurrentTime()
+		{
+			if(userSliding == false)
+			{
+				document.getElementById("currentTime").innerHTML = secondsToTime(audioPlayer.currentTime);
+				playbackSlider.noUiSlider.set(audioPlayer.currentTime);
+			}
+		}
+		
+		//Update slider and displayed duration after song is changed
+		audioPlayer.ondurationchange = function() {setSongDuration()}		
+		function setSongDuration()
+		{
+			var songDuration = audioPlayer.duration;
+			//update slider length
+			playbackSlider.noUiSlider.updateOptions({
+				range: {
+					'min': 0,
+					'max': songDuration
+				}
+			});
+			playbackSlider.noUiSlider.set(0);
+			//change displayed length
+			
+			document.getElementById("duration").innerHTML = secondsToTime(songDuration);
+		}
+		
+		//Go to next song at end
+		audioPlayer.onended = function()
+		{
+			if(audioPlayer.loop == false)
+			{
+				var newSongIndex = getCurrentSongIndex();
+				
+				//back to start and stop if at end
+				if (newSongIndex != songButtons.length)
+				{
+					console.log("on end");
+					audioPlayer.autoplay = true;
+					newSongIndex = (newSongIndex + 1) % songButtons.length;
+					setCurrentSong(songButtons[newSongIndex].value);
+				} else
+				{
+					console.log("to start");
+					newSongIndex = 0;
+					setCurrentSong(songButtons[newSongIndex].value);
+					audioPlayer.autoplay = false;
+				}
+			}
+		}//end audio player on end
 		
 		function secondsToTime(time)
 		{
@@ -312,60 +386,43 @@ input[type=range][orient=vertical]
 			}
 		}
 		
-		function updateAudioProgressBar()
-		{
-			if(disableProgressBarUpdate == false)
-			{
-				//get transport time
-				var currentTime = Math.round(Tone.Transport.getSecondsAtTime()); 
-				//update progress bar
-				document.getElementById("audioProgressBar").value = currentTime;
-				document.getElementById("currentTime").innerHTML = secondsToTime(currentTime);
-			}
-			if(document.getElementById("currentTime").innerHTML == document.getElementById("duration").innerHTML)
-			{
-				Tone.Transport.stop();
-				document.getElementById("audioProgressBar").value = 0;
-				document.getElementById("currentTime").innerHTML = "0:00";
-			}
-		}
-		
-		Tone.Transport.scheduleRepeat(updateAudioProgressBar, "4n", "0m");
-		
-		//on change
-		function setTransport(newTime)
-		{
-			Tone.Transport.seconds = newTime;
-			disableProgressBarUpdate = false;
-		}
-		
-		//on input
-		function setCurrentTime(newTime)
-		{
-			disableProgressBarUpdate = true;
-			document.getElementById("currentTime").innerHTML = secondsToTime(newTime);
-		}
-		//end audio progress bar
-		
 		function playButton()
 		{
-			var playState = document.getElementById("playButton").innerHTML;
-			if(playState == "play_circle_outline")
+			if(audioPlayer.paused == true)//Start Playing
 			{
-				Tone.Transport.start();
-				document.getElementById("playButton").innerHTML = "pause_circle_outline";
-			} else {
-				Tone.Transport.pause();
-				document.getElementById("playButton").innerHTML = "play_circle_outline";
+				audioPlayer.play();				
 			}
-		}
+			else {//Pause Audio
+				audioPlayer.pause();				
+			}//endif
+		}//end playButton
 		
-		function changeVolume(channel)
+		audioPlayer.onplay = function()
 		{
-			players.get(shortAlphabet[channel]).volume.value = document.getElementById("fader"+channel).value;
+			document.getElementById("playButton").innerHTML = "pause_circle_outline";
 		}
 		
-		function toggleChannel(channel)
+		audioPlayer.onpause = function()
+		{
+			document.getElementById("playButton").innerHTML = "play_circle_outline";
+		}
+		
+		function loopButton()
+		{
+			var loopState = document.getElementById("loopButton").innerHTML;
+			if(loopState == "sync")//Start Playing
+			{				
+				audioPlayer.loop = false; 
+				document.getElementById("loopButton").innerHTML = "sync_disabled";
+			}
+			else {//Pause Audio
+				audioPlayer.loop = true; 
+				document.getElementById("loopButton").innerHTML = "sync";
+			}//endif
+		}//end loopButton
+		
+		
+		function toggleChannel(leftChannel,rightChannel)
 		{
 			var player = shortAlphabet[channel];
 			if(document.getElementById("toggle"+channel).value == 1)
@@ -376,6 +433,28 @@ input[type=range][orient=vertical]
 				players.get(player).mute = false;
 				document.getElementById("toggle"+channel).value = 1;
 			}
+		}
+		
+		function getCurrentSongIndex()
+		{
+			//get the current audio file
+			var currentSong = audioPlayer.src;
+			
+			//filter out everything but the ID
+			var stringStart = currentSong.indexOf('OGGs/')+5;
+			var stringEnd = currentSong.indexOf('.oggs')-3;
+			
+			//slice it out
+			currentSong = currentSong.slice(stringStart, stringEnd);
+			currentSong = currentSong.replace("%20", " ");
+			
+			currentSong = document.getElementById(currentSong);
+			
+			var i;
+			for(i = 0; currentSong != songButtons[i] || i > songButtons.length; i++)
+			{
+			}
+			return i;
 		}
 	
 	</script>

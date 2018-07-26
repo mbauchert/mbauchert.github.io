@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+	<!-- Material Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="nouislider.min.css" rel="stylesheet">
+	<style>
+.loader {
+  position: absolute;
+  left: 35%;
+  top: 50%;
+  border: 16px solid #231F20;
+  border-radius: 50%;
+  border-top: 16px solid #8E793E;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 0.5s linear infinite; /* Safari */
+  animation: spin 0.5s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+	<style>
+		body{background-color: #231F20}
+		.dark-gold{color: #8E793E}
+		.light-gold{color: #AD974F}
+		.intellectual-grey{color: #231F20}
+		.light-grey{color: #EAEAEA}
+		
+		.play-button{font-size:500%}
+		
+		.material-icons{
+			-webkit-user-select: none; /* Safari */        
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* IE10+/Edge */
+			user-select: none; /* Standard */
+		}
+		.material-icons:active{color:#8E793E}
+		.pad-top{padding-top: 20px}
+		
+		/*Chrome*/
+
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;   
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+input[type=range][orient=vertical]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 100%;
+    padding: 0 5px;
+}
+	.modal-content{
+		background-color: #8E793E;
+	}
+	
+	.modal-header{
+		border-bottom: 0px;
+	}
+	.controls{
+		bottom: 0;
+		position: fixed;
+		padding-top: 40px;
+		background: rgb(35,31,32);
+		background: linear-gradient(0deg, rgba(35,31,32,1) 78%, rgba(173,151,79,0) 100%);
+		z-index: 1;
+	}
+	
+	.list-group-item{
+		background-color:transparent;
+		color: #EAEAEA;
+	}
+	.list-group-item:hover{
+		background-color:transparent;
+		color: #AD974F;
+	}
+	.list-group-item:active{
+		background-color:#AD974F;
+		color: #231F20;
+	}
+	</style>
+	<style>
+		.sliders {
+			height: 100%;
+			margin: auto;
+		}
+	</style>
+    <title>Hello, world!</title>
+  </head>
+  <body>
+	<div class="container-fluid">
+		<br>
+		<div class="list-group list-group-flush">
+			<script>
+				var songs = [{ "title":"Will Mixing Test","part":["1-Click","2-Audio"] },
+							 { "title":"ForAFriend", "part":["Playback","Vocals","FX"]}];
+				for (var i = 0; i < songs.length; i++)
+				{
+					document.write('<button class="list-group-item list-group-item-action" value="'+ i +'" onclick="setCurrentSong(value)">'+ songs[i].title +'</button>');
+				}			
+			</script>
+			
+			
+		</div>
+	</div>
+	
+    <div class="container-fluid controls">
+		<div class="row">
+			<div class="col text-center">
+				<p class="light-gold" id="currentSongTitle"></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-2 text-right">
+				<p class="light-gold" id="currentTime">0:00</p>
+			</div>
+			<div class="col-8">
+				<input type="range" class="slider" min="0" max="0" value="0" id="audioProgressBar" oninput="setCurrentTime(value)" onchange="setTransport(value)">
+			</div>
+			<div class="col-2 text-left">
+				<p class="light-gold" id="duration">0:00</p>
+			</div>
+		</div>
+		<div class="row light-gold">
+			<div class="col text-left">
+				<i data-toggle="modal" data-target="#modalFaders" class="material-icons pad-top align-middle">equalizer</i>
+			</div>
+			<div class="col-6 text-center">
+				<i class="material-icons align-middle">skip_previous</i>
+				<i class="material-icons play-button align-middle" onclick="playButton()" id="playButton">play_circle_outline</i>
+				<i class="material-icons align-middle">skip_next</i>
+			</div>
+			<div class="col text-right">
+				<i class="material-icons pad-top align-middle">file_download</i>
+			</div>
+		</div>
+		
+		
+
+		
+	</div>
+	
+	<!-- Modal -->
+		<div class="modal fade" id="modalFaders" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" style="text-shadow: #8E793E" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true">&times;</span>
+				</button>
+			  </div>
+			  <div class="modal-body">
+				<div class="container-fluid">
+					<div class="row text-center" style="height:375px">
+						<div class="col">
+							<div id="slider0" class="sliders"></div>				
+						</div>
+						<div class="col">
+							<div id="slider1" class="sliders"></div>				
+						</div>
+						<div class="col">
+							<div id="slider2" class="sliders"></div>				
+						</div>
+						<div class="col">
+							<div id="slider2" class="sliders"></div>
+						</div>
+					</div>
+				<br>
+					<div class="row text-center">
+						<div class="col">
+							<button type="button" class="btn" value="1" id="toggle0" onclick="toggleChannel(0)">Clk</button>				
+						</div>
+						<div class="col">
+							<button type="button" class="btn" value="1" id="toggle1" onclick="toggleChannel(1)">Per</button>				
+						</div>
+						<div class="col">
+							<button type="button" class="btn" value="1" id="toggle2" onclick="toggleChannel(2)">Mus</button>				
+						</div>
+						<div class="col">
+							<button type="button" class="btn" value="1" id="toggle3" onclick="toggleChannel(3)">Bas</button>				
+						</div>			
+					</div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		
+		
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document" >    
+		<div class="loader text-center"></div>        
+      
+  </div>
+</div>
+		
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  
+	<script src="Tone.min.js"></script>
+	<script src="nouislider.min.js"></script>
+	
+	<script>
+		//FOR WRITING
+		//click music percussion bass
+		
+		//FOR LISTENING
+		//percussion bass music vocals
+		
+		var shortAlphabet = ['a','b','c','d'];
+		//put audio files into this thing
+		var players = new Tone.Players();
+		players.toMaster();
+		
+		//set bpm to be one beat per second
+		Tone.Transport.bpm.value = 60;
+		Tone.Transport.loop = true;
+		
+		function setCurrentSong(newSong)
+		{
+			playButton("newSong");//stop audio and reset playbar		
+			
+			$('#loadingModal').modal('show');//show loading circle
+			
+			//load new url into buffers
+			for(var i = 0; i< 4; i++)
+			{
+				var newPart = songs[newSong].part[i];
+				
+				if(players.has(shortAlphabet[i]) == false && newPart != undefined)//player is unoccupied and needs filled
+				{
+					players.add(shortAlphabet[i], songs[newSong].title+' '+newPart+'.mp3');
+					players.get(shortAlphabet[i]).sync().start(0);
+					document.getElementById("toggle"+i).innerHTML = newPart;
+				
+				} else if(players.has(shortAlphabet[i]) == true && newPart != undefined)//player is occupied and needs replaced
+				{
+					players.get(shortAlphabet[i]).load(songs[newSong].title+' '+newPart+'.mp3');
+					players.get(shortAlphabet[i]).sync().start(0);
+					document.getElementById("toggle"+i).innerHTML = newPart;
+				
+				} else if(players.has(shortAlphabet[i]) == true && newPart == undefined)//player is occupied and needs disconnecting
+				{
+					players.get(shortAlphabet[i]).disconnect();
+					document.getElementById("toggle"+i).innerHTML = "";
+				}
+				
+				
+				/*if(players.has(shortAlphabet[i]))
+				{
+					console.log(shortAlphabet[i]+ " exists");
+					players.get(shortAlphabet[i]).dispose();
+				}
+
+				if(newPart != undefined)//if there is a track to load
+				{
+					//console.log(shortAlphabet[i]+" added");
+					//players.get(shortAlphabet[i]).load(songs[newSong].title+' '+newPart+'.mp3');
+					players.add(shortAlphabet[i], songs[newSong].title+' '+newPart+'.mp3');
+					
+					players.get(shortAlphabet[i]).sync().start(0);
+					document.getElementById("toggle"+i).innerHTML = newPart;
+				}
+				else //if there is no track to load
+				{
+					//set unused players to _.mp3
+					//players.get(shortAlphabet[i]).load("_.mp3");
+					//players.get(shortAlphabet[i]).dispose();
+					document.getElementById("toggle"+i).innerHTML = "";
+				}*/
+			}
+			
+			//when all buffers are loaded.
+			Tone.Buffer.on('load', function(){				
+				//set song title
+				document.getElementById("currentSongTitle").innerHTML = songs[newSong].title;
+				//set audio progress bar back to 0
+				document.getElementById("audioProgressBar").value= 0;
+				document.getElementById("currentTime").innerHTML = "0:00";
+				//set the length of the song
+				var bufferDuration = players.get("a").buffer.duration;
+				Tone.Transport.loopEnd = bufferDuration;
+				document.getElementById("audioProgressBar").max = Math.round(bufferDuration);
+				bufferDuration = secondsToTime(bufferDuration);
+				//set progress bar legnth and duration legnth
+				document.getElementById("duration").innerHTML = bufferDuration;
+				$('#loadingModal').modal('hide');
+			});	
+			
+		}//end set new song
+		
+		//AUDIO PROGRESS BAR
+		var disableProgressBarUpdate = false;
+		
+		function secondsToTime(time)
+		{
+			time = Math.round(time);
+			
+			var minutes = Math.floor(time / 60);
+			var seconds = time%60;
+			
+			if(seconds < 10)
+			{
+				return(minutes+":0" + seconds);
+			} else
+			{
+				return (minutes + ":" + seconds);
+			}
+		}
+		
+		function updateAudioProgressBar()
+		{
+			if(disableProgressBarUpdate == false)
+			{
+				//get transport time
+				var currentTime = Math.round(Tone.Transport.getSecondsAtTime()); 
+				//update progress bar
+				document.getElementById("audioProgressBar").value = currentTime;
+				document.getElementById("currentTime").innerHTML = secondsToTime(currentTime);
+			}
+			if(document.getElementById("currentTime").innerHTML == document.getElementById("duration").innerHTML)
+			{
+				Tone.Transport.stop();
+				document.getElementById("audioProgressBar").value = 0;
+				document.getElementById("currentTime").innerHTML = "0:00";
+			}
+		}
+		
+		Tone.Transport.scheduleRepeat(updateAudioProgressBar, "4n", "0m");
+		
+		//on change
+		function setTransport(newTime)
+		{
+			Tone.Transport.scheduleOnce(function (){Tone.Transport.seconds = newTime;});
+			disableProgressBarUpdate = false;
+			console.log(newTime);
+		}
+		
+		//on input
+		function setCurrentTime(newTime)
+		{
+			disableProgressBarUpdate = true;
+			document.getElementById("currentTime").innerHTML = secondsToTime(newTime);
+		}
+		//end audio progress bar
+		
+		function playButton(playState = document.getElementById("playButton").innerHTML)
+		{
+			if(playState == "newSong")//Reset Timeline When Changing SOng
+			{
+				Tone.Transport.stop();
+				document.getElementById("playButton").innerHTML = "play_circle_outline";
+				
+			} else if(playState == "play_circle_outline")//Start Playing
+			{
+				Tone.Transport.start();
+				document.getElementById("playButton").innerHTML = "pause_circle_outline";
+				
+			} else {//Pause Audio
+				Tone.Transport.pause();
+				document.getElementById("playButton").innerHTML = "play_circle_outline";
+			}//endif
+		}//end playButton
+		
+		function changeVolume(channel, volume)
+		{
+			players.get(shortAlphabet[channel]).volume.value = volume;
+		}
+		
+		function toggleChannel(channel)
+		{
+			var player = shortAlphabet[channel];
+			if(document.getElementById("toggle"+channel).value == 1)
+			{
+				players.get(player).mute = true;
+				document.getElementById("toggle"+channel).value = 0;
+			} else {
+				players.get(player).mute = false;
+				document.getElementById("toggle"+channel).value = 1;
+			}
+		}
+		
+		//sliders
+		
+		var sliders = document.getElementsByClassName('sliders');
+		[].slice.call(sliders).forEach(function( slider, index ){
+
+			noUiSlider.create(slider, {
+				start: 0,
+				connect: true,
+				range: {
+					'min': -72,
+					'50%': -12,
+					'max': 6
+				},
+				// Put '0' at the bottom of the slider
+				direction: 'rtl',
+				orientation: 'vertical'
+			});
+			slider.noUiSlider.on('update', function () {
+				if(players.has(shortAlphabet[index]))
+					changeVolume(index, slider.noUiSlider.get());									
+			});
+		});
+		
+	
+	</script>
+  </body>
+</html>
